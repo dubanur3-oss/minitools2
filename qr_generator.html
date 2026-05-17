@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator Pro</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
+    body { background: #111; color: #fff; font-family: 'Outfit', sans-serif; display:flex; flex-direction:column; align-items:center;  min-height: 100vh; margin:0;}
+    .box { background: rgba(255,255,255,0.02); padding: 40px; border-radius: 12px; border:1px solid #333; margin-top: 50px; text-align:center; box-shadow: 0 10px 30px #000;}
+    input[type="text"] { width: 100%; padding: 15px; background: #000; border: 1px solid #7000ff; color:#fff; border-radius: 8px; font-size:1.1rem; margin-bottom: 20px;}
+    #qr-container { background:#fff; padding:20px; border-radius:8px; display:inline-block; margin-top:20px;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1 style="color:#7000ff;">Generador QR Infinito</h1>
+    <p>Convierte enlaces, teléfonos o mensajes secretos en Códigos QR de alta resolución.</p>
+    
+    <input type="text" id="text-input" placeholder="https://youtube.com/tu-canal">
+    
+    <div id="qr-container"></div>
+  </div>
+  
+  <div style="margin-top:40px;">[ ESPACIO ADSENSE ]</div>
+
+  <script>
+    const qrContainer = document.getElementById('qr-container');
+    const input = document.getElementById('text-input');
+    
+    let qr = new QRCode(qrContainer, {
+        text: "https://minitools-network.vercel.app",
+        width: 256,
+        height: 256,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    input.addEventListener('input', () => {
+        if(input.value.trim().length > 0) {
+            qr.clear();
+            qr.makeCode(input.value);
+        }
+    });
+  </script>
+</body>
+</html>

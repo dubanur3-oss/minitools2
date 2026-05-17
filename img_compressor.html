@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Compresor de Imágenes | AdSense Tool</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
+    body { background: #0c0a13; color: #fff; font-family: 'Outfit', sans-serif; display:flex; flex-direction:column; align-items:center;  min-height: 100vh; margin:0;}
+    .box { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 16px; text-align: center; max-width: 600px; width:100%; border:1px solid #333; margin-top: 50px;}
+    .file-btn { background: #00f5ff; color: #000; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; margin: 20px 0; display:inline-block;}
+    input[type="file"] { display: none; }
+    input[type="range"] { width: 100%; margin: 20px 0; }
+    .stats { display: flex; justify-content: space-around; margin: 20px 0; color: #00f5ff;}
+    #download-btn { display:none; background:#7000ff; color:#fff; border:none; padding:15px; border-radius:8px; cursor:pointer; width:100%; font-weight:bold; font-size:1.1rem;}
+    img { max-width: 100%; max-height: 300px; border-radius: 8px; margin-top:20px; display:none;}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1 style="color:#00f5ff;">🗜 Compresor Z-Max</h1>
+    <p style="opacity:0.8">Reduce el peso en MB de tus fotos en segundos sin subirlas a ningún servidor.</p>
+    
+    <label class="file-btn">
+      <input type="file" id="fileIn" accept="image/*">
+      SELECCIONAR FOTO PESADA
+    </label>
+
+    <div id="controls" style="display:none;">
+       <p>Calidad de Compresión: <span id="q-val">50</span>%</p>
+       <input type="range" id="quality" min="10" max="100" value="50">
+       
+       <div class="stats">
+           <div>Original: <b id="s-old">-</b></div>
+           <div>Comprimido: <b id="s-new">-</b></div>
+       </div>
+
+       <img id="preview">
+       <button id="download-btn">DESCARGAR IMAGEN LIGERA</button>
+    </div>
+  </div>
+  
+  <div style="margin-top:30px; padding:20px; border:1px dashed #444;">[ PUBLICIDAD ADSENSE ]</div>
+
+  <script>
+    let originalFile, originalImage;
+    const qSlider = document.getElementById('quality');
+    
+    document.getElementById('fileIn').addEventListener('change', e => {
+       originalFile = e.target.files[0];
+       if(!originalFile) return;
+       document.getElementById('s-old').textContent = (originalFile.size / 1024 / 1024).toFixed(2) + " MB";
+       
+       originalImage = new Image();
+       originalImage.onload = () => {
+           document.getElementById('controls').style.display = 'block';
+           compress();
+       };
+       originalImage.src = URL.createObjectURL(originalFile);
+    });
+
+    qSlider.addEventListener('input', () => {
+       document.getElementById('q-val').textContent = qSlider.value;
+       compress();
+    });
+
+    function compress() {
+       const canvas = document.createElement('canvas');
+       canvas.width = originalImage.width; canvas.height = originalImage.height;
+       const ctx = canvas.getContext('2d');
+       ctx.drawImage(originalImage, 0, 0);
+       
+       const quality = parseInt(qSlider.value) / 100;
+       const dataUrl = canvas.toDataURL('image/jpeg', quality);
+       
+       document.getElementById('preview').src = dataUrl;
+       document.getElementById('preview').style.display = 'block';
+       
+       // Calculate approx size
+       const blob = Math.round((dataUrl.length * 3 / 4) / 1024);
+       document.getElementById('s-new').innerHTML = `<span style="color:#00ff00">${(blob / 1024).toFixed(2)} MB</span>`;
+       
+       const btn = document.getElementById('download-btn');
+       btn.style.display = 'block';
+       btn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = "comprimida_" + originalFile.name.replace(/\.[^/.]+$/, ".jpg");
+          a.click();
+       };
+    }
+  </script>
+</body>
+</html>
