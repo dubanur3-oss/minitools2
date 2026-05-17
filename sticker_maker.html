@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Sticker Maker | Outline Photo</title>
+  <title>Sticker Maker Pro | Outline Photo</title>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
@@ -13,28 +13,41 @@
     .file-upload { display: inline-block; padding: 12px 24px; background: linear-gradient(45deg, #ff007f, #7000ff); border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 20px; transition: 0.3s;}
     .file-upload:hover { box-shadow: 0 0 20px rgba(255,0,127,0.4); transform: scale(1.05);}
     input[type="file"] { display: none; }
+
+    #controls { background: #000; padding:15px; border-radius:8px; display:flex; gap:20px; align-items:center; border:1px solid #333; margin-top:20px;}
     
     canvas { max-width: 100%; border: 1px dashed rgba(255,255,255,0.2); margin-top: 20px; border-radius: 8px; background: repeating-conic-gradient(#1a1a1a 0% 25%, #2a2a2a 0% 50%) 50% / 20px 20px;}
     
-    #btn-download { display: none; margin-top: 20px; background: #fff; color: #000; padding: 10px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;}
-    .ad-space { margin-top: 30px; width: 320px; height: 100px; background: #000; border: 1px solid #333; color: #666; display: flex; align-items: center; justify-content: center; }
+    #btn-download { background: #fff; color: #000; padding: 15px; width:100%; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 20px;}
+    .ad-space { margin-top: 30px; width: 320px; height: 100px; background: #000; border: 1px dashed #333; color: #555; display: flex; align-items: center; justify-content: center; }
   </style>
 </head>
 <body>
 
-  <h1>Sticker Maker Creador</h1>
+  <h1>🎨 Transformador a Sticker</h1>
   
   <div class="box">
-    <p style="opacity: 0.8; margin-bottom:20px;">Sube un PNG transparente y nosotros le haremos el borde blanco super profesional automáticamente.</p>
+    <p style="opacity: 0.8; margin-bottom:20px;">Sube un PNG transparente y ajústale el borde para Whatsapp.</p>
     
     <label class="file-upload">
       <input type="file" id="fileIn" accept="image/*">
       🗂 SELECCIONAR IMAGEN
     </label>
 
-    <canvas id="canvas"></canvas>
+    <div id="controls" style="display:none;">
+        <div style="display:flex; flex-direction:column; align-items:center;">
+             <span>Color</span>
+             <input type="color" id="outlineColor" value="#ffffff" style="background:transparent; border:none; cursor:pointer; width:40px; height:40px;">
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; flex-grow:1;">
+             <span>Grosor: <span id="vS">15</span>px</span>
+             <input type="range" id="outlineSize" min="1" max="50" value="15" style="width:100%;">
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
     
-    <button id="btn-download">💾 DESCARGAR STICKER</button>
+    <button id="btn-download" style="display:none;">💾 DESCARGAR STICKER</button>
   </div>
 
   <div class="ad-space">[ PUBLICIDAD ADSENSE ]</div>
@@ -43,7 +56,44 @@
     const fileIn = document.getElementById('fileIn');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const btnDown = document.getElementById('btn-download');
+    const controls = document.getElementById('controls');
+    
+    const sliderSize = document.getElementById('outlineSize');
+    const colorPick = document.getElementById('outlineColor');
+    const sizeVal = document.getElementById('vS');
+
+    let currentImg = null;
+
+    function renderSticker() {
+        if(!currentImg) return;
+        const size = parseInt(sliderSize.value);
+        sizeVal.textContent = size;
+        
+        canvas.width = currentImg.width + (size * 2);
+        canvas.height = currentImg.height + (size * 2);
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+
+        // HACK DE SOMBRA (Múltiples sombras alrededor del objeto)
+        ctx.shadowColor = colorPick.value;
+        const steps = 16; 
+        for(let i=0; i<steps; i++){
+            const angle = (i * 2 * Math.PI) / steps;
+            ctx.shadowOffsetX = Math.cos(angle) * size;
+            ctx.shadowOffsetY = Math.sin(angle) * size;
+            ctx.shadowBlur = 1; 
+            ctx.drawImage(currentImg, size, size);
+        }
+
+        // Repintar imagen por encima limpia
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.drawImage(currentImg, size, size);
+
+        canvas.style.display = 'block';
+        document.getElementById('btn-download').style.display = 'block';
+    }
 
     fileIn.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -51,40 +101,17 @@
 
       const img = new Image();
       img.onload = () => {
-        // Configuramos la sangria del borde (Padding extra para que no se corte)
-        const outlineSize = 15;
-        canvas.width = img.width + (outlineSize * 2);
-        canvas.height = img.height + (outlineSize * 2);
-        
-        ctx.clearRect(0,0, canvas.width, canvas.height);
-
-        // HACK DE SOMBRA PARA HACER EL OUTLINE:
-        // Dibujamos la sombra repetidas veces alrededor formando un borde solido
-        ctx.shadowColor = 'white';
-        // Calidad del stroke simulado
-        const steps = 16; 
-        for(let i=0; i<steps; i++){
-            const angle = (i * 2 * Math.PI) / steps;
-            ctx.shadowOffX = Math.cos(angle) * outlineSize;
-            ctx.shadowOffsetY = Math.sin(angle) * outlineSize;
-            ctx.shadowBlur = 2; // Para que sea sólido
-            // Dibujamos el fill varias veces
-            ctx.drawImage(img, outlineSize, outlineSize);
-        }
-
-        // Una vez tenemos la placa blanca trasera, quitamos las sombras y repintamos la imagen centrada encima
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.drawImage(img, outlineSize, outlineSize);
-
-        btnDown.style.display = 'block';
+         currentImg = img;
+         controls.style.display = 'flex';
+         renderSticker();
       };
       img.src = URL.createObjectURL(file);
     });
 
-    btnDown.onclick = () => {
+    sliderSize.addEventListener('input', renderSticker);
+    colorPick.addEventListener('input', renderSticker);
+
+    document.getElementById('btn-download').onclick = () => {
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
       a.download = 'sticker_pro.png';

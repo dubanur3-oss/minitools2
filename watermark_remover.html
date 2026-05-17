@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Borrador de Marcas | AdSense Tool</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
+    body { background: #0c0a13; color: #fff; font-family: 'Outfit', sans-serif; display:flex; flex-direction:column; align-items:center; min-height:100vh; margin:0;}
+    .header { padding:20px; text-align:center; }
+    h1 { color: #fff; margin:0; }
+    p { opacity:0.7; }
+    
+    .toolbar { background:#111; padding:15px; border-radius:12px; display:flex; gap:20px; align-items:center; border:1px solid #333; margin-bottom: 20px;}
+    .file-btn { background: #00f5ff; color: #000; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;}
+    input[type="file"] { display: none; }
+    button { background:#333; color:#fff; border:none; padding:10px 20px; border-radius:6px; cursor:pointer;}
+    button:hover { background:#444; }
+
+    .canvas-container { position: relative; max-width:800px; max-height:600px; overflow:hidden;}
+    canvas { background: #000; cursor: crosshair; touch-action: none; border-radius:8px;}
+    .ad-banner { margin-top:20px; padding:20px; color:#555; border:1px dashed #333; text-align:center; width:100%; max-width:720px;}
+    
+    #cursor-source { position: absolute; width:30px; height:30px; border:2px dashed #00f5ff; border-radius:50%; z-index:90; pointer-events:none; display:none; transform:translate(-50%,-50%);}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🧽 Tampón Mágico</h1>
+    <p>Presiona <b>ALT + CLIC</b> en una textura limpia, luego <b>dibuja sobre la marca de agua</b> para cubrirla.</p>
+  </div>
+
+  <div class="toolbar">
+    <label class="file-btn">
+      <input type="file" id="fileIn" accept="image/*">
+      SUBIR FOTO
+    </label>
+    <span>Grosor del Pincel:</span>
+    <input type="range" id="brushSize" min="5" max="100" value="30">
+    <button onclick="descargar()">Guardar Foto</button>
+  </div>
+
+  <div class="canvas-container" id="container">
+     <div id="cursor-source"></div>
+     <canvas id="canvas"></canvas>
+  </div>
+  
+  <div class="ad-banner">[ ESPACIO ADSENSE DISPLAY ]</div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const cursor = document.getElementById('cursor-source');
+    
+    let isDrawing = false;
+    let sourceX = null, sourceY = null;
+    let offsetX = null, offsetY = null; // Distancia entre el offset clonado y el ratón
+    let currentImg = null;
+
+    document.getElementById('fileIn').addEventListener('change', e => {
+       const file = e.target.files[0];
+       if(!file) return;
+       const img = new Image();
+       img.onload = () => {
+           currentImg = img;
+           const maxWidth = 800;
+           let scale = 1;
+           if(img.width > maxWidth) scale = maxWidth / img.width;
+           canvas.width = img.width * scale;
+           canvas.height = img.height * scale;
+           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+       };
+       img.src = URL.createObjectURL(file);
+    });
+
+    document.getElementById('brushSize').addEventListener('input', e=>{
+        cursor.style.width = e.target.value+"px";
+        cursor.style.height = e.target.value+"px";
+    });
+
+    function getCoords(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+
+    canvas.addEventListener('mousedown', e => {
+       if(!currentImg) return;
+       const {x, y} = getCoords(e);
+       
+       if (e.altKey) {
+           // Fijar el origen del clonado
+           sourceX = x; sourceY = y;
+           cursor.style.left = `${x}px`;
+           cursor.style.top = `${y}px`;
+           cursor.style.display = 'block';
+       } else {
+           if (sourceX === null) {
+               alert("Mantén presionada la tecla 'ALT' y haz clic en una zona limpia de la foto primero para clonar textura.");
+               return;
+           }
+           isDrawing = true;
+           offsetX = x - sourceX;
+           offsetY = y - sourceY;
+           clonarPatch(x, y);
+       }
+    });
+
+    canvas.addEventListener('mousemove', e => {
+       if (!isDrawing) return;
+       const {x, y} = getCoords(e);
+       clonarPatch(x, y);
+       
+       // Move target visual
+       cursor.style.left = `${x - offsetX}px`;
+       cursor.style.top = `${y - offsetY}px`;
+    });
+
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+    function clonarPatch(targetX, targetY) {
+        const size = document.getElementById('brushSize').value;
+        const srcX = targetX - offsetX;
+        const srcY = targetY - offsetY;
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(targetX, targetY, size/2, 0, Math.PI*2);
+        ctx.clip();
+        
+        // Copiar parche de la imagen origen hacia el target
+        ctx.drawImage(canvas, srcX - size/2, srcY - size/2, size, size, targetX - size/2, targetY - size/2, size, size);
+        ctx.restore();
+    }
+
+    function descargar() {
+        if(!currentImg) return;
+         const a = document.createElement('a');
+         a.href = canvas.toDataURL('image/jpeg', 0.9);
+         a.download = 'foto_limpia.jpg';
+         a.click();
+    }
+  </script>
+</body>
+</html>
