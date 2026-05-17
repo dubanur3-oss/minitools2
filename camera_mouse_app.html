@@ -134,8 +134,14 @@
         }
     });
 
-    const camera = new camera_utils.Camera(video, {
-      onFrame: async () => { await faceMeshModel.send({image: video}); },
+    const camera = new Camera(video, {
+      onFrame: async () => { 
+          try {
+              await faceMeshModel.send({image: video});
+          } catch(e) {
+              console.error("Error inferencia:", e);
+          }
+      },
       width: 640,
       height: 480
     });
