@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub de Herramientas Web Exclusivas</title>
+  <!-- SCRIPT DE MONETIZACIÓN GLOBAL ADSENSE -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
+    :root { --bg: #07090f; --primary: #7000ff; --sec: #00f5ff; --surface: rgba(20,25,40,0.6); --border: rgba(112, 0, 255, 0.3); }
+    body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; overflow-x: hidden;}
+    
+    header { padding: 60px 20px; text-align: center; background: radial-gradient(circle at top, rgba(112,0,255,0.2) 0%, var(--bg) 60%); }
+    h1 { font-size: 3rem; margin: 0; background: linear-gradient(90deg, var(--sec), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    p.desc { opacity: 0.6; font-size: 1.1rem; max-width: 600px; margin: 15px auto; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto 80px auto; padding: 20px; }
+    .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 16px; backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; overflow: hidden;}
+    .card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(0,245,255,0.05)); opacity: 0; transition: 0.4s; }
+    .card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 35px rgba(112,0,255,0.2); border-color: var(--sec); }
+    .card:hover::before { opacity: 1; }
+    .card h2 { font-size: 1.5rem; margin: 10px 0; color: #fff; display: flex; align-items: center; gap: 10px;}
+    .card p { opacity: 0.7; font-size: 0.95rem; line-height: 1.6; margin: 0 0 20px 0; flex-grow: 1; }
+    
+    .badge { background: rgba(0,245,255,0.1); border: 1px solid var(--sec); padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; color: var(--sec); align-self: flex-start; text-transform: uppercase; letter-spacing: 1px;}
+    
+    /* AD SLOTS */
+    .ad-banner { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); max-width: 970px; height: 90px; margin: 0 auto 40px auto; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 2px;}
+    
+    footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); opacity: 0.5; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>TOOLBOX OMEGA</h1>
+    <p class="desc">Una colección premium de herramientas diseñadas para solventar problemas del día a día, funcionando 100% en tu navegador de manera privada.</p>
+  </header>
+
+  <div class="ad-banner">[ GOOGLE ADSENSE HORIZONTAL BANNER ]</div>
+
+  <div class="grid">
+    <!-- APP 1: OVERNOTE -->
+    <a href="notes_app.html" class="card">
+      <span class="badge">Productividad</span>
+      <h2>📝 Overnote</h2>
+      <p>Bloc de notas súper ligero offline. Tus ideas se guardan criptográficamente en tu navegador sin cuentas ni contraseñas. Organización por libretas.</p>
+    </a>
+    
+    <!-- APP 3: TRADING BOT CREATOR -->
+    <a href="bot_creator_app.html" class="card">
+      <span class="badge">Finanzas / Code</span>
+      <h2>📈 Trading Bot Maker</h2>
+      <p>Crea la lógica para bots de trading de manera visual usando reglas de cruces de indicadores (RSI, MACD) y genera el pseudocódigo listo para armar.</p>
+    </a>
+    
+    <!-- APP 4: STICKER MAKER -->
+    <a href="sticker_maker.html" class="card">
+      <span class="badge">Edición Imagen</span>
+      <h2>✨ Creador de Stickers</h2>
+      <p>Sube una imagen sin fondo (PNG) y el algoritmo aplicará de inmediato un perfilado perfecto blanco para que lo uses en WhatsApp o Telegram como sticker.</p>
+    </a>
+
+    <!-- LOCKED APPS FOR THE VISUAL EXPERIENCE OF LOT 1 -->
+    <div class="card" style="opacity:0.3; filter:grayscale(1); pointer-events: none;">
+      <span class="badge" style="border-color:#555; color:#aaa;">Próximamente</span>
+      <h2>👁 Face Mouse AI</h2>
+      <p>Controla el ratón del ordenador únicamente moviendo la cabeza con una IA de detección facial. Perfecto para manos ocupadas.</p>
+    </div>
+    
+    <div class="card" style="opacity:0.3; filter:grayscale(1); pointer-events: none;">
+      <span class="badge" style="border-color:#555; color:#aaa;">Próximamente</span>
+      <h2>🎥 Media to GIF</h2>
+      <p>Convierte videos o ráfagas de fotos en GIFs súper comprimidos sin marca de agua desde tu navegador.</p>
+    </div>
+    
+    <div class="card" style="opacity:0.3; filter:grayscale(1); pointer-events: none;">
+      <span class="badge" style="border-color:#555; color:#aaa;">Próximamente</span>
+      <h2>🧽 Removedor Zen</h2>
+      <p>Borra automáticamente elementos de fotografías pequeñas sin necesidad de Photoshop gracias al inpainting.</p>
+    </div>
+  </div>
+
+  <div class="ad-banner" style="height: 250px;">[ GOOGLE ADSENSE RECTANGULAR BLOCK ]</div>
+
+  <footer>
+    <p>&copy; 2026 Toolbox Omega. Herramientas 100% Client-Side seguras. Construido con IA.</p>
+  </footer>
+
+</body>
+</html>

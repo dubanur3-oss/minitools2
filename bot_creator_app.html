@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Trading Bot Maker Visual</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap');
+    body { background: #0a0e17; color: #fff; font-family: 'Outfit', sans-serif; margin:0; padding:40px; display:flex; gap: 40px;}
+    .panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 30px; flex: 1; }
+    h1 { color: #bb86fc; margin-top:0;}
+    .row { display: flex; gap: 10px; margin-bottom: 20px; align-items: center;}
+    select, input { background: #1a1f2b; border: 1px solid #333; color: #fff; padding: 10px; border-radius: 6px; font-family: inherit;}
+    .btn { background: #bb86fc; color: #000; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s;}
+    .btn:hover { background: #d7b5fe; }
+    pre { background: #000; padding: 20px; border-radius: 8px; border: 1px solid #333; overflow-x: auto; color: #0f0; }
+    #rules-list { margin-bottom: 30px; }
+    .rule-chip { background: rgba(187,134,252,0.1); border: 1px solid #bb86fc; padding: 8px 16px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.9rem;}
+    .ad-slot { margin-top: 20px; text-align: center; color: #555; background:#000; padding:10px; border:1px dashed #333;}
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <h1>📈 Generador de Bot Visual</h1>
+    <p style="opacity:0.7">Construye la lógica de tu estrategia y obtén el pseudocódigo para MT5/PineScript.</p>
+    
+    <div class="row" style="margin-top:30px;">
+      <select id="indicador">
+        <option value="RSI">RSI (14)</option>
+        <option value="MACD_MAIN">MACD Line</option>
+        <option value="EMA50">EMA 50</option>
+        <option value="PRICE">Precio de Cierre</option>
+      </select>
+      
+      <select id="operador">
+        <option value=">">Mayor que</option>
+        <option value="<">Menor que</option>
+        <option value="CROSS_UP">Cruza Hacia Arriba</option>
+        <option value="CROSS_DOWN">Cruza Hacia Abajo</option>
+      </select>
+
+      <input type="text" id="valor" placeholder="Ej: 70 o SMA200" style="width: 120px;">
+    </div>
+    
+    <div class="row">
+      <span style="font-weight:bold;">ACCIÓN:</span>
+      <select id="accion">
+        <option value="BUY">Abrir COMPRA (Buy)</option>
+        <option value="SELL">Abrir VENTA (Sell)</option>
+        <option value="CLOSE">Cerrar Operaciones</option>
+      </select>
+    </div>
+
+    <button class="btn" id="btn-add">AÑADIR REGLA</button>
+
+    <div style="margin-top:40px;">
+      <h3>Reglas Actuales:</h3>
+      <div id="rules-list"></div>
+    </div>
+    <div class="ad-slot">[ PUBLICIDAD DISPLAY ]</div>
+  </div>
+
+  <div class="panel">
+    <h2>Código Generado (Pseudo-MQL5)</h2>
+    <pre id="code-box">// El código aparecerá aquí</pre>
+    <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('code-box').innerText)">COPIAR CÓDIGO</button>
+  </div>
+
+  <script>
+    let rules = [];
+    const uiList = document.getElementById('rules-list');
+    const uiCode = document.getElementById('code-box');
+
+    document.getElementById('btn-add').onclick = () => {
+      const ind = document.getElementById('indicador').value;
+      const op = document.getElementById('operador').value;
+      const val = document.getElementById('valor').value || '0';
+      const act = document.getElementById('accion').value;
+
+      rules.push({ind, op, val, act});
+      render();
+    };
+
+    function render() {
+      uiList.innerHTML = '';
+      uiCode.innerHTML = 'void OnTick() {\n    double price = iClose(Symbol(), 0, 0);\n';
+
+      rules.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'rule-chip';
+        div.textContent = `SI ${r.ind} ${r.op} ${r.val} => ${r.act}`;
+        uiList.appendChild(div);
+
+        // Pseudocode generation
+        let condition = `${r.ind} ${r.op} ${r.val}`;
+        if(r.op === 'CROSS_UP') condition = `${r.ind}_prev < ${r.val}_prev && ${r.ind}_current > ${r.val}_current`;
+        if(r.op === 'CROSS_DOWN') condition = `${r.ind}_prev > ${r.val}_prev && ${r.ind}_current < ${r.val}_current`;
+
+        let actionCode = `OrderSend(Symbol(), OP_${r.act}, 0.1, price, 3, 0, 0);`;
+        if(r.act === 'CLOSE') actionCode = `CloseAllPositions();`;
+
+        uiCode.innerHTML += `\n    if (${condition}) {\n        ${actionCode}\n    }\n`;
+      });
+      uiCode.innerHTML += '\n}';
+    }
+  </script>
+</body>
+</html>
