@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Face Mouse AI | Hands-Free Control</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  
+  <!-- Dependencias MediaPipe para el Mesh Facial -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
+    body { background: #000; color: #fff; font-family: 'Outfit', sans-serif; margin:0; overflow:hidden; }
+    h1 { color: #00ffcc; margin: 20px; text-shadow: 0 0 10px rgba(0,255,204,0.5); z-index:10; position:relative;}
+    
+    #cursor_ai {
+        width: 30px; height: 30px; background: rgba(0,255,204,0.8); border: 2px solid #fff;
+        border-radius: 50%; position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%); pointer-events: none; z-index: 99999;
+        transition: transform 0.1s; box-shadow: 0 0 20px #00ffcc;
+    }
+    #cursor_ai.clicking { background: #ff003c; box-shadow: 0 0 20px #ff003c; transform: translate(-50%, -50%) scale(0.6); }
+
+    /* Playground para probar los clicks */
+    .playground { position: absolute; inset: 0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:1; }
+    .target-btn { padding: 30px 60px; font-size: 2rem; background: rgba(255,255,255,0.05); border: 2px solid #00ffcc; color:#fff; cursor: pointer; border-radius: 12px; transition: 0.3s; }
+    .target-btn:hover { background: rgba(0,255,204,0.2); }
+    .target-btn.active { background: #ff00cc; border-color: #ff00cc; }
+    
+    #video-element { display: none; }
+    #loader { position: absolute; inset:0; background:#000; z-index:100; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+    .spinner { width: 50px; height:50px; border:4px solid #333; border-top-color:#00ffcc; border-radius:50%; animation: rot 1s linear infinite; margin-bottom:20px;}
+    @keyframes rot { to { transform: rotate(360deg); }}
+  </style>
+</head>
+<body>
+
+  <div id="loader">
+      <div class="spinner"></div>
+      <div style="color:#00ffcc;">Cargando Red Neuronal FaceMesh...</div>
+  </div>
+
+  <h1>👁 Face Mouse AI Playground</h1>
+  <p style="text-align:center; color:#888; position:relative; z-index:10;">
+    Mueve la cabeza para controlar el puntero.<br>
+    <strong>Abre la boca o guiña ambos ojos muy fuerte</strong> para hacer CLIC.
+  </p>
+
+  <div class="playground">
+      <button class="target-btn" id="btn1">BOTÓN DE PRUEBA 1</button>
+      <button class="target-btn" id="btn2">BOTÓN DE PRUEBA 2</button>
+      <div style="margin-top:50px; border:1px dashed #333; padding:20px; color:#555;">[ ADSENSE BANNER ]</div>
+  </div>
+
+  <div id="cursor_ai"></div>
+  <video id="video-element" autoplay playsinline></video>
+
+  <script>
+    const video = document.getElementById('video-element');
+    const cursor = document.getElementById('cursor_ai');
+    
+    document.querySelectorAll('.target-btn').forEach(b => {
+        b.addEventListener('click', () => {
+            b.classList.toggle('active');
+            b.textContent = b.classList.contains('active') ? "¡CLICK ACERTADO!" : "BOTÓN DE PRUEBA";
+        });
+    });
+
+    const faceMeshModel = new window.FaceMesh({locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+    }});
+    
+    faceMeshModel.setOptions({
+      maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6
+    });
+
+    // Tracking del parpadeo/boca
+    let isClicking = false;
+    let clickCooldown = 0;
+
+    faceMeshModel.onResults(results => {
+        document.getElementById('loader').style.display = 'none';
+
+        if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+            const face = results.multiFaceLandmarks[0];
+            
+            // Punto 4 es la punta de la nariz!
+            const nose = face[4];
+            
+            // Mapemos la posición de la nariz al tamaño de la pantalla
+            // Multiplicamos para que el rango de movimiento sea más cómodo sutilmente
+            const mapX = (1.0 - nose.x); // Invertir porque es espejo
+            const mapY = nose.y;
+
+            // Expandir rango (Sensibilidad del ratón)
+            const sensitivity = 2.0;
+            const cX = ((mapX - 0.5) * sensitivity + 0.5) * window.innerWidth;
+            const cY = ((mapY - 0.5) * sensitivity + 0.5) * window.innerHeight;
+
+            cursor.style.left = `${Math.min(Math.max(cX, 0), window.innerWidth)}px`;
+            cursor.style.top  = `${Math.min(Math.max(cY, 0), window.innerHeight)}px`;
+
+            // Detectar apertura de boca (Click)
+            // Punto 13 (labio inferior) y 14 (labio superior)
+            const lipTop = face[13];
+            const lipBot = face[14];
+            const mouthOpen = Math.hypot(lipTop.x - lipBot.x, lipTop.y - lipBot.y);
+
+            // Guiño de ojo
+            const eyeL1=face[159], eyeL2=face[145];
+            const eyeR1=face[386], eyeR2=face[374];
+            const eyeLD = Math.hypot(eyeL1.x-eyeL2.x, eyeL1.y-eyeL2.y);
+            const eyeRD = Math.hypot(eyeR1.x-eyeR2.x, eyeR1.y-eyeR2.y);
+
+            if (!isClicking && clickCooldown < Date.now()) {
+                if (mouthOpen > 0.05 || (eyeLD < 0.01 && eyeRD < 0.01)) { 
+                    isClicking = true;
+                    cursor.classList.add('clicking');
+                    
+                    // Disparar click en el elemento debajo del cursor
+                    const targetEl = document.elementFromPoint(cX, cY);
+                    if (targetEl && targetEl.click) {
+                        targetEl.click();
+                    }
+
+                    setTimeout(() => {
+                        cursor.classList.remove('clicking');
+                        isClicking = false;
+                        clickCooldown = Date.now() + 500; // 500ms debounce
+                    }, 200);
+                }
+            }
+        }
+    });
+
+    const camera = new camera_utils.Camera(video, {
+      onFrame: async () => { await faceMeshModel.send({image: video}); },
+      width: 640,
+      height: 480
+    });
+    camera.start();
+  </script>
+</body>
+</html>

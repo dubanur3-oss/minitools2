@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Palette Generator | Herramienta AdSense</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap');
+    body { background: #0a0a0a; color: #fff; font-family: 'Outfit', sans-serif; margin:0; display:flex; flex-direction:column; align-items:center; min-height: 100vh;}
+    h1 { margin-top: 50px; font-size: 2.5rem; text-shadow: 0 0 20px rgba(255,255,255,0.3);}
+    .upload-btn { background: #7000ff; color: #fff; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-bottom: 30px; transition: 0.3s; display:inline-block;}
+    .upload-btn:hover { background: #9000ff; box-shadow: 0 0 20px #7000ff;}
+    input[type="file"] { display: none; }
+    
+    #preview-img { max-width: 400px; max-height: 300px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain; display:none;}
+    .palette-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; max-width: 800px; margin-bottom: 50px;}
+    
+    .color-card { width: 120px; height: 160px; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.5); transition: 0.3s; cursor:pointer;}
+    .color-card:hover { transform: translateY(-10px); }
+    .color-fill { flex-grow: 1; }
+    .color-info { background: #111; padding: 15px; text-align: center; font-size: 0.9rem; font-weight: bold; font-family: monospace;}
+    
+    .ad-banner { background: #111; border: 1px dashed #333; width: 100%; max-width: 728px; height: 90px; display: flex; align-items: center; justify-content: center; color: #555; }
+  </style>
+</head>
+<body>
+
+  <h1>🎨 Creador de Paleta Cromática</h1>
+  <p style="opacity:0.7; margin-bottom:40px;">Sube una imagen y extrae automáticamente los colores exactos para usar en tus diseños.</p>
+
+  <div class="ad-banner" style="margin-bottom: 40px;">[ PUBLICIDAD ADSENSE ]</div>
+
+  <label class="upload-btn">
+    <input type="file" id="fileIn" accept="image/*">
+    Sube tu Fotografía
+  </label>
+  
+  <img id="preview-img">
+  
+  <div class="palette-container" id="palette-out"></div>
+  
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <script>
+    const fileIn = document.getElementById('fileIn');
+    const preview = document.getElementById('preview-img');
+    const paletteOut = document.getElementById('palette-out');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Función simple de extracción de color (Cuantización básica)
+    function extractColors(imgData) {
+        const rgbVals = [];
+        for(let i=0; i<imgData.length; i+=4*10) { // Saltamos píxeles para velocidad
+            const r = imgData[i], g = imgData[i+1], b = imgData[i+2], a = imgData[i+3];
+            if (a < 128) continue;
+            // Agrupar colores oscureciendo bits bajos (cuantización a 32 bins por canal)
+            const rQ = Math.round(r / 32) * 32;
+            const gQ = Math.round(g / 32) * 32;
+            const bQ = Math.round(b / 32) * 32;
+            rgbVals.push(`${rQ},${gQ},${bQ}`);
+        }
+        
+        const colorCounts = {};
+        let maxCount = 0;
+        rgbVals.forEach(c => {
+            colorCounts[c] = (colorCounts[c] || 0) + 1;
+        });
+
+        // Ordenar colores por frecuencia y eliminar puros negros o blancos si no son dominantes
+        const sortedColors = Object.keys(colorCounts).sort((a,b) => colorCounts[b] - colorCounts[a]);
+        return sortedColors.slice(0, 6);
+    }
+
+    function rgbToHex(r, g, b) {
+        return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1).toUpperCase();
+    }
+
+    fileIn.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const url = URL.createObjectURL(file);
+        
+        preview.src = url;
+        preview.style.display = 'block';
+
+        const img = new Image();
+        img.onload = () => {
+             canvas.width = img.width;
+             canvas.height = img.height;
+             ctx.drawImage(img, 0, 0);
+             const imgData = ctx.getImageData(0,0, canvas.width, canvas.height);
+             
+             const domColors = extractColors(imgData.data);
+             
+             paletteOut.innerHTML = '';
+             domColors.forEach(c => {
+                 const [r,g,b] = c.split(',').map(Number);
+                 const hex = rgbToHex(r,g,b);
+                 
+                 const card = document.createElement('div');
+                 card.className = 'color-card';
+                 card.title = `Copiar ${hex}`;
+                 card.innerHTML = `
+                    <div class="color-fill" style="background: rgb(${r},${g},${b});"></div>
+                    <div class="color-info">${hex}</div>
+                 `;
+                 card.onclick = () => {
+                     navigator.clipboard.writeText(hex);
+                     card.querySelector('.color-info').innerHTML = 'Copiado!';
+                     setTimeout(() => card.querySelector('.color-info').innerHTML = hex, 1000);
+                 };
+                 paletteOut.appendChild(card);
+             });
+        }
+        img.src = url;
+    });
+  </script>
+</body>
+</html>
