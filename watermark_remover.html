@@ -122,18 +122,31 @@
     canvas.addEventListener('mouseleave', () => isDrawing = false);
 
     function clonarPatch(targetX, targetY) {
-        const size = document.getElementById('brushSize').value;
+        const size = parseInt(document.getElementById('brushSize').value);
         const srcX = targetX - offsetX;
         const srcY = targetY - offsetY;
         
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(targetX, targetY, size/2, 0, Math.PI*2);
-        ctx.clip();
+        // Crear canvas temporal para hacer el pincel con bordes difuminados (Soft Edge Brush)
+        const off = document.createElement('canvas');
+        off.width = size; off.height = size;
+        const oCtx = off.getContext('2d');
         
-        // Copiar parche de la imagen origen hacia el target
-        ctx.drawImage(canvas, srcX - size/2, srcY - size/2, size, size, targetX - size/2, targetY - size/2, size, size);
-        ctx.restore();
+        // 1. Extraer el parche original completo
+        oCtx.drawImage(canvas, srcX - size/2, srcY - size/2, size, size, 0, 0, size, size);
+        
+        // 2. Crear una máscara de desvanecimiento radial para bordes suaves
+        const grad = oCtx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+        grad.addColorStop(0, "rgba(0,0,0,0.8)"); // Centro semi-opaco para no manchar tan duro
+        grad.addColorStop(0.5, "rgba(0,0,0,0.4)"); // Desvanecimiento
+        grad.addColorStop(1, "rgba(0,0,0,0)"); // Borde transparente e invisible
+        
+        // 3. Aplicar la máscara difuminada al parche
+        oCtx.globalCompositeOperation = 'destination-in';
+        oCtx.fillStyle = grad;
+        oCtx.fillRect(0, 0, size, size);
+        
+        // 4. Pintar el pincel difuminado suave en la foto
+        ctx.drawImage(off, targetX - size/2, targetY - size/2);
     }
 
     function descargar() {
