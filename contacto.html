@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | Toolbox Omega</title>
+  <meta name="description" content="Contacta con el equipo de Toolbox Omega. Reporta errores, sugiere herramientas o consulta sobre colaboraciones.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://minitools2.vercel.app/contacto.html">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0a13;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --accent: #7c3aed;
+      --cyan: #00f5ff;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+    nav {
+      background: rgba(12,10,19,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .nav-back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text); }
+
+    /* Ad banner top */
+    .ad-top {
+      max-width: 960px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+      min-height: 90px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(124,58,237,0.2);
+      color: var(--accent);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 10px;
+    }
+    .page-header p {
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    input, textarea, select {
+      width: 100%;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      padding: 13px 16px;
+      color: var(--text);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+    select option { background: #1a1a2e; }
+    textarea { resize: vertical; min-height: 130px; }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), #5b21b6);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.3px;
+    }
+    .btn-submit:hover { opacity: 0.9; }
+    .btn-submit:active { transform: scale(0.99); }
+
+    .contact-info {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .info-icon {
+      font-size: 1.2rem;
+      margin-top: 2px;
+    }
+    .info-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .info-value {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .info-value a { color: var(--accent); text-decoration: none; }
+    .info-value a:hover { text-decoration: underline; }
+
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 32px 20px;
+    }
+    .success-msg .icon { font-size: 3rem; margin-bottom: 16px; }
+    .success-msg h2 { color: var(--cyan); margin-bottom: 8px; }
+    .success-msg p { color: var(--muted); margin-bottom: 24px; }
+    .btn-back {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Ad bottom */
+    .ad-bottom {
+      max-width: 960px;
+      margin: 32px auto 0;
+      padding: 0 24px;
+      min-height: 90px;
+    }
+
+    @media (max-width: 600px) {
+      .contact-info { grid-template-columns: 1fr; }
+      .card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">⚡ Toolbox Omega</a>
+  <a class="nav-back" href="index.html">← Inicio</a>
+</nav>
+
+<!-- Ad top -->
+<div class="ad-top">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3189672198116367"
+       data-ad-slot="SLOT_TOP"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <span class="badge">Soporte</span>
+    <h1>Contáctanos</h1>
+    <p>¿Encontraste un error, tienes una idea para una herramienta nueva, o quieres explorar una colaboración? Escríbenos.</p>
+  </div>
+
+  <div class="card">
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Tu nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required>
+      </div>
+      <div class="form-group">
+        <label for="asunto">Asunto</label>
+        <select id="asunto">
+          <option value="">— Selecciona una opción —</option>
+          <option value="bug">Reportar un error / bug</option>
+          <option value="sugerencia">Sugerir una herramienta</option>
+          <option value="colaboracion">Colaboración / Publicidad</option>
+          <option value="privacidad">Consulta de privacidad / datos</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" placeholder="Cuéntanos en detalle..." required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Enviar mensaje →</button>
+    </form>
+
+    <div class="success-msg" id="successMsg">
+      <div class="icon">✅</div>
+      <h2>¡Mensaje recibido!</h2>
+      <p>Gracias por contactarnos. Nuestro equipo revisará tu mensaje y responderá lo antes posible.</p>
+      <a class="btn-back" href="index.html">Volver al inicio</a>
+    </div>
+
+    <div class="contact-info">
+      <div class="info-item">
+        <span class="info-icon">📧</span>
+        <div>
+          <div class="info-label">Email directo</div>
+          <div class="info-value"><a href="mailto:info@minitools.vercel.app">info@minitools.vercel.app</a></div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">⚡</span>
+        <div>
+          <div class="info-label">Tiempo de respuesta</div>
+          <div class="info-value">24 – 48 horas hábiles</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🔒</span>
+        <div>
+          <div class="info-label">Privacidad</div>
+          <div class="info-value"><a href="politicas.html">Ver política de privacidad</a></div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">🌍</span>
+        <div>
+          <div class="info-label">Idiomas</div>
+          <div class="info-value">Español · English</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Ad bottom -->
+<div class="ad-bottom">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3189672198116367"
+       data-ad-slot="SLOT_BTM"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad | Toolbox Omega</title>
+  <meta name="description" content="Política de privacidad y términos de uso de Toolbox Omega. Información sobre cookies, Google AdSense y protección de datos.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://minitools2.vercel.app/politicas.html">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0c0a13;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --accent: #7c3aed;
+      --cyan: #00f5ff;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    nav {
+      background: rgba(12,10,19,0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+    .nav-back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+      margin-bottom: 40px;
+    }
+    .page-header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--cyan);
+      margin: 36px 0 12px;
+      padding-left: 12px;
+      border-left: 3px solid var(--accent);
+    }
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 20px 0 8px;
+    }
+    p { margin-bottom: 14px; color: var(--text); }
+    ul, ol {
+      margin: 0 0 14px 24px;
+      color: var(--text);
+    }
+    li { margin-bottom: 6px; }
+    a { color: var(--accent); }
+    a:hover { color: var(--cyan); }
+    .highlight-box {
+      background: rgba(0,245,255,0.05);
+      border: 1px solid rgba(0,245,255,0.15);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin: 24px 0;
+    }
+    .highlight-box strong { color: var(--cyan); }
+    .badge {
+      display: inline-block;
+      background: rgba(124,58,237,0.2);
+      color: var(--accent);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    th {
+      background: rgba(255,255,255,0.05);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: none; }
+    .footer-nav {
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">⚡ Toolbox Omega</a>
+  <a class="nav-back" href="index.html">← Volver al inicio</a>
+</nav>
+
+<div class="container">
+
+  <div class="page-header">
+    <span class="badge">Documento Legal</span>
+    <h1>Política de Privacidad</h1>
+    <p>Última actualización: <strong>18 de mayo de 2026</strong> &nbsp;·&nbsp; Toolbox Omega — minitools2.vercel.app</p>
+  </div>
+
+  <div class="highlight-box">
+    <strong>Resumen rápido:</strong> Todas nuestras herramientas funcionan 100% en tu dispositivo. No guardamos tus archivos, fotos, datos de cámara ni información personal en ningún servidor. Usamos Google AdSense para financiar el servicio gratuito; ese programa sí utiliza cookies de personalización de anuncios.
+  </div>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <p>El sitio web Toolbox Omega (en adelante "el Sitio"), accesible en <a href="https://minitools2.vercel.app">minitools2.vercel.app</a>, es operado con fines informativos y de utilidad pública. Para consultas relacionadas con privacidad puede contactarnos a través de la página de <a href="contacto.html">Contacto</a>.</p>
+
+  <h2>2. Datos que NO recopilamos</h2>
+  <p>Dado que todas las herramientas del Sitio son <strong>client-side</strong> (se ejecutan en tu navegador), <strong>nunca</strong> transmitimos ni almacenamos:</p>
+  <ul>
+    <li>Imágenes, vídeos o capturas de cámara web</li>
+    <li>Audio o transcripciones de micrófono</li>
+    <li>Archivos subidos para comprimir, convertir o analizar</li>
+    <li>Contraseñas, claves o datos de encriptación</li>
+    <li>Huellas dactilares, datos biométricos o faciales</li>
+    <li>Pulsaciones de teclado ni historial de uso de las herramientas</li>
+  </ul>
+  <p>Todo procesamiento es local y volátil: los datos desaparecen al cerrar la pestaña.</p>
+
+  <h2>3. Datos que SÍ recopilamos (y cómo)</h2>
+  <h3>3.1 Datos de registro del servidor (Vercel)</h3>
+  <p>El alojamiento en Vercel puede registrar automáticamente: dirección IP anonimizada, tipo de navegador, sistema operativo, página referente y marca de tiempo de la visita. Estos registros se conservan durante un máximo de 30 días con fines de seguridad y disponibilidad. Para más información consulta la <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Política de privacidad de Vercel</a>.</p>
+
+  <h3>3.2 Cookies de Google AdSense</h3>
+  <p>Utilizamos Google AdSense (Editor ID: <code>ca-pub-3189672198116367</code>) para mostrar publicidad que financia el acceso gratuito a las herramientas. Google, como proveedor de publicidad externo, utiliza cookies para:</p>
+  <ul>
+    <li>Mostrar anuncios relevantes basados en visitas anteriores a este sitio y otros sitios web.</li>
+    <li>Limitar la frecuencia con la que aparece un anuncio.</li>
+    <li>Medir la efectividad de campañas publicitarias.</li>
+  </ul>
+  <p>Las cookies de DoubleClick/Google DART permiten a Google mostrar anuncios a los usuarios en función de su visita a este y otros sitios de Internet. Los usuarios pueden deshabilitar el uso de la cookie DART visitando la <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Política de privacidad de publicidad de Google</a>.</p>
+
+  <h2>4. Socios publicitarios (terceros)</h2>
+  <p>Las redes publicitarias de terceros utilizadas en este Sitio pueden usar tecnologías como cookies, JavaScript o Web Beacons en sus respectivos anuncios, los cuales se envían directamente al navegador del usuario. En ese caso reciben automáticamente tu dirección IP. Estas tecnologías se utilizan para medir la efectividad de sus campañas publicitarias y personalizar el contenido que ves.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Proveedor</th>
+        <th>Finalidad</th>
+        <th>Política de privacidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Google AdSense / DoubleClick</td>
+        <td>Publicidad personalizada y contextual</td>
+        <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ver política</a></td>
+      </tr>
+      <tr>
+        <td>Vercel Inc.</td>
+        <td>Alojamiento web y CDN</td>
+        <td><a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Ver política</a></td>
+      </tr>
+      <tr>
+        <td>Google Fonts</td>
+        <td>Tipografías web (carga desde CDN de Google)</td>
+        <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ver política</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Ten en cuenta que Toolbox Omega no tiene acceso ni control sobre las cookies utilizadas por los anunciantes de terceros.</p>
+
+  <h2>5. Derechos del usuario (GDPR / LGPD / CCPA)</h2>
+  <p>Si resides en el Espacio Económico Europeo, Colombia, Brasil, California u otras jurisdicciones con leyes de privacidad aplicables, tienes derecho a:</p>
+  <ul>
+    <li><strong>Acceso:</strong> solicitar qué datos personales tenemos sobre ti.</li>
+    <li><strong>Rectificación:</strong> corregir datos inexactos.</li>
+    <li><strong>Supresión:</strong> solicitar la eliminación de tus datos ("derecho al olvido").</li>
+    <li><strong>Oposición:</strong> oponerte al tratamiento de tus datos para publicidad.</li>
+    <li><strong>Portabilidad:</strong> recibir tus datos en formato estructurado.</li>
+    <li><strong>Opt-out de publicidad personalizada:</strong> visita <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a> o <a href="https://optout.aboutads.info" target="_blank" rel="noopener">optout.aboutads.info</a>.</li>
+  </ul>
+  <p>Para ejercer cualquiera de estos derechos, contáctanos desde nuestra página de <a href="contacto.html">Contacto</a>. Responderemos en un plazo máximo de 30 días naturales.</p>
+
+  <h2>6. Consentimiento de cookies</h2>
+  <p>Al continuar navegando por el Sitio sin modificar la configuración de tu navegador, se entiende que aceptas el uso de cookies tal como se describe en esta política. Puedes bloquear o eliminar cookies en cualquier momento desde la configuración de tu navegador; sin embargo, esto puede afectar la funcionalidad de algunas secciones del Sitio.</p>
+
+  <h2>7. Privacidad de menores</h2>
+  <p>Toolbox Omega no está dirigido a menores de 13 años (16 años en la UE). No recopilamos intencionadamente información personal de niños. Si eres padre/madre o tutor y crees que tu hijo ha facilitado información personal, contáctanos para eliminarla de inmediato.</p>
+
+  <h2>8. Cambios en esta política</h2>
+  <p>Nos reservamos el derecho de actualizar esta Política de Privacidad en cualquier momento. Los cambios entran en vigor desde su publicación en esta página. Recomendamos revisar periódicamente esta sección. El uso continuado del Sitio tras la publicación de cambios constituye aceptación de los mismos.</p>
+
+  <h2>9. Términos de uso</h2>
+  <p>El uso de las herramientas es gratuito y se ofrece "tal cual", sin garantías de ningún tipo. Toolbox Omega no se responsabiliza de pérdidas de datos, interrupciones del servicio o daños directos/indirectos derivados del uso del Sitio. El usuario acepta utilizar las herramientas únicamente con fines lícitos y dentro del marco legal de su jurisdicción.</p>
+
+  <h2>10. Contacto</h2>
+  <p>Para cualquier consulta relacionada con esta política, puedes contactarnos a través de nuestra <a href="contacto.html">página de contacto</a>.</p>
+
+  <div class="footer-nav">
+    <a class="btn-primary" href="index.html">← Volver al inicio</a>
+    <a class="btn-ghost" href="contacto.html">Contacto</a>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -3,110 +3,224 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hub de Herramientas Web Exclusivas</title>
-  <!-- SCRIPT DE MONETIZACIÓN GLOBAL ADSENSE -->
+  <title>Toolbox Omega — Herramientas Web Gratuitas con IA | Sin Instalación</title>
+  <meta name="description" content="10+ herramientas web gratuitas con inteligencia artificial: transcriptor de voz, control por cara, compresor de imágenes, generador QR, eliminador de marcas de agua y más. Todo en tu navegador, sin instalar nada.">
+  <meta name="keywords" content="herramientas web gratis, herramientas ia online, compresor imágenes, generador qr, transcriptor voz ia, eliminar marca de agua, paleta colores, base64 online, antivirus web, trading bot">
+  <meta name="author" content="Toolbox Omega">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://minitools2.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Toolbox Omega — Herramientas Web Gratis con IA">
+  <meta property="og:description" content="La colección de herramientas web más completa. Transcriptor IA, control por cara, compresor, QR, antivirus y más. Gratis y sin registro.">
+  <meta property="og:url" content="https://minitools2.vercel.app/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Toolbox Omega","url":"https://minitools2.vercel.app/","description":"Colección de herramientas web gratuitas con IA","inLanguage":"es"}</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
-  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap');
-    :root { --bg: #07090f; --primary: #7000ff; --sec: #00f5ff; --surface: rgba(20,25,40,0.6); --border: rgba(112, 0, 255, 0.3); }
-    body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; overflow-x: hidden;}
-    
-    header { padding: 50px 20px; text-align: center; background: radial-gradient(circle at top, rgba(112,0,255,0.2) 0%, var(--bg) 60%); }
-    h1 { font-size: 3rem; margin: 0; background: linear-gradient(90deg, var(--sec), var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    p.desc { opacity: 0.6; font-size: 1.1rem; max-width: 600px; margin: 15px auto; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto 80px auto; padding: 20px; }
-    .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 16px; backdrop-filter: blur(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; overflow: hidden;}
-    .card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent, rgba(0,245,255,0.05)); opacity: 0; transition: 0.4s; }
-    .card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 35px rgba(112,0,255,0.2); border-color: var(--sec); }
-    .card:hover::before { opacity: 1; }
-    .card h2 { font-size: 1.5rem; margin: 10px 0; color: #fff; display: flex; align-items: center; gap: 10px;}
-    .card p { opacity: 0.7; font-size: 0.95rem; line-height: 1.6; margin: 0 0 20px 0; flex-grow: 1; }
-    
-    .badge { background: rgba(0,245,255,0.1); border: 1px solid var(--sec); padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: bold; color: var(--sec); align-self: flex-start; text-transform: uppercase; letter-spacing: 1px;}
-    
-    .ad-banner { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); max-width: 970px; height: 90px; margin: 0 auto 40px auto; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.8rem; letter-spacing: 2px;}
-    footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); opacity: 0.5; font-size: 0.8rem; }
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden}
+    nav{position:sticky;top:0;z-index:100;background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+    .nav-links{display:flex;gap:28px}.nav-links a{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.nav-links a:hover{color:var(--sec)}
+    @media(max-width:600px){.nav-links{display:none}}
+    header.hero{padding:70px 24px 50px;text-align:center;background:radial-gradient(circle at top center,rgba(112,0,255,.18) 0%,var(--bg) 65%);border-bottom:1px solid var(--border)}
+    .eyebrow{display:inline-block;background:rgba(0,245,255,.08);border:1px solid rgba(0,245,255,.3);color:var(--sec);padding:4px 16px;border-radius:20px;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px}
+    h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;background:linear-gradient(135deg,#fff 0%,var(--sec) 50%,var(--primary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:18px;line-height:1.15}
+    .hero-sub{color:var(--dim);font-size:1.05rem;max-width:580px;margin:0 auto 32px;line-height:1.75}
+    .hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap}.stat{text-align:center}.stat strong{display:block;font-size:1.6rem;font-weight:800;color:var(--sec)}.stat span{font-size:.78rem;color:var(--dim);letter-spacing:1px}
+    .ad-wrap{max-width:970px;margin:0 auto;padding:14px 20px;text-align:center}
+    .ad-label{font-size:.65rem;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+    .ad-container{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px;overflow:hidden;min-height:50px}
+    section{padding:56px 24px}
+    .section-title{text-align:center;margin-bottom:40px}.section-title h2{font-size:1.8rem;font-weight:800;margin-bottom:8px}.section-title p{color:var(--dim);font-size:.95rem;max-width:500px;margin:0 auto;line-height:1.7}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+    .card{background:var(--surface);border:1px solid var(--border);padding:28px;border-radius:14px;backdrop-filter:blur(20px);transition:transform .35s cubic-bezier(.175,.885,.32,1.275),box-shadow .35s,border-color .35s;cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;position:relative;overflow:hidden}
+    .card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(0,245,255,.04));opacity:0;transition:opacity .35s}
+    .card:hover{transform:translateY(-6px) scale(1.015);box-shadow:0 16px 40px rgba(112,0,255,.22);border-color:var(--sec)}.card:hover::after{opacity:1}
+    .card-icon{font-size:2rem;margin-bottom:12px}.badge{background:rgba(0,245,255,.08);border:1px solid var(--sec);padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:600;color:var(--sec);align-self:flex-start;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+    .card h2{font-size:1.2rem;font-weight:700;margin-bottom:10px}.card p{color:var(--dim);font-size:.88rem;line-height:1.65;flex-grow:1;margin-bottom:16px}.card-cta{color:var(--sec);font-size:.8rem;font-weight:600;letter-spacing:1px}
+    .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:900px;margin:0 auto}
+    .why-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center}
+    .why-card .icon{font-size:2rem;margin-bottom:12px}.why-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}.why-card p{color:var(--dim);font-size:.82rem;line-height:1.65}
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:48px 24px 32px;text-align:center}
+    .footer-logo{font-size:1.3rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
+    .footer-desc{color:var(--dim);font-size:.85rem;max-width:440px;margin:0 auto 24px;line-height:1.7}
+    .footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+    .footer-links a{color:var(--sec);text-decoration:none;font-size:.82rem;opacity:.8;transition:opacity .2s}.footer-links a:hover{opacity:1}
+    .footer-copy{color:var(--dim);font-size:.75rem}
+    .ad-strip{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0}
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>TOOLBOX OMEGA</h1>
-    <p class="desc">10 Herramientas premium hiper-rápidas para solventar problemas del día a día, funcionando 100% en tu navegador de manera privada.</p>
-  </header>
+<nav>
+  <div class="nav-logo">TOOLBOX OMEGA</div>
+  <div class="nav-links">
+    <a href="#herramientas">Herramientas</a>
+    <a href="#por-que">¿Por qué?</a>
+    <a href="#arcade">Arcade</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+</nav>
 
-  <div class="ad-banner">[ GOOGLE ADSENSE HORIZONTAL BANNER ]</div>
+<header class="hero">
+  <div class="eyebrow">✦ 100% Gratis · Sin Registro · Sin Instalación</div>
+  <h1>Herramientas Web<br>Impulsadas por IA</h1>
+  <p class="hero-sub">La colección más completa de herramientas de productividad, diseño e inteligencia artificial que funcionan directamente en tu navegador. Privado, rápido y completamente gratis.</p>
+  <div class="hero-stats">
+    <div class="stat"><strong>10+</strong><span>HERRAMIENTAS</span></div>
+    <div class="stat"><strong>100%</strong><span>PRIVADO</span></div>
+    <div class="stat"><strong>0€</strong><span>COSTO</span></div>
+    <div class="stat"><strong>∞</strong><span>USOS</span></div>
+  </div>
+</header>
 
+<div class="ad-strip">
+  <div class="ad-wrap">
+    <div class="ad-label">Publicidad</div>
+    <div class="ad-container">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3189672198116367" data-ad-slot="SLOT_TOP" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+</div>
+
+<section id="herramientas">
+  <div class="section-title">
+    <h2>🛠️ Herramientas Disponibles</h2>
+    <p>Todo el procesamiento ocurre en tu dispositivo. Tus archivos, voz e imágenes nunca salen de tu navegador.</p>
+  </div>
   <div class="grid">
     <a href="notes_app.html" class="card">
       <span class="badge">Inteligencia Artificial</span>
-      <h2>🎙 Overnote Transcriptor</h2>
-      <p>Extrae todo el texto de tus videos o de tu micrófono en tiempo real usando IA de voz y guárdalo localmente como notas.</p>
+      <div class="card-icon">🎙️</div>
+      <h2>Overnote Transcriptor</h2>
+      <p>Extrae texto de videos o de tu micrófono en tiempo real usando IA de voz. Guarda y exporta tus notas localmente con un clic.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="camera_mouse_app.html" class="card">
-      <span class="badge" style="border-color:#ff00cc; color:#ff00cc;">Accesibilidad IA</span>
-      <h2>👁 Face Mouse AI</h2>
-      <p>Controla el ratón únicamente moviendo la cabeza por medio de redes neuronales de mapeo. Abre la boca para "hacer click".</p>
+      <span class="badge" style="border-color:#ff00cc;color:#ff00cc;">Accesibilidad IA</span>
+      <div class="card-icon">👁️</div>
+      <h2>Face Mouse AI</h2>
+      <p>Controla el cursor del ratón moviendo tu cabeza usando redes neuronales. Abre la boca para hacer clic. Ideal para accesibilidad.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="bot_creator_app.html" class="card">
-      <span class="badge">Finanzas / Code</span>
-      <h2>📈 Trading Bot Maker</h2>
-      <p>Crea la lógica para bots de trading de manera visual usando reglas (RSI, MACD) y genera el pseudocódigo C++.</p>
+      <span class="badge" style="border-color:#00ff88;color:#00ff88;">Finanzas / Código</span>
+      <div class="card-icon">📈</div>
+      <h2>Trading Bot Maker</h2>
+      <p>Diseña tu bot de trading visualmente con indicadores RSI, MACD, Bollinger. Genera pseudocódigo C++ y MQL5 al instante.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="sticker_maker.html" class="card">
-      <span class="badge">Edición Imagen</span>
-      <h2>✨ Creador de Stickers</h2>
-      <p>Añade un borde blanco perfecto (outline) e iluminaciones a cualquier imagen PNG/JPG y expórtalo tipo WhatsApp/Telegram.</p>
+      <span class="badge" style="border-color:#ffaa00;color:#ffaa00;">Edición Imagen</span>
+      <div class="card-icon">✨</div>
+      <h2>Creador de Stickers</h2>
+      <p>Añade bordes blancos e iluminación a imágenes PNG/JPG para crear stickers estilo WhatsApp o Telegram. Exporta en segundos.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-
     <a href="palette_generator.html" class="card">
-      <span class="badge" style="border-color:#00ff55; color:#00ff55;">Diseño Gráfico</span>
-      <h2>🎨 Paleta Cromática</h2>
-      <p>Extrae instantáneamente una paleta de colores hexadecimales exactos a partir de cualquier fotografía artística.</p>
+      <span class="badge" style="border-color:#00ff55;color:#00ff55;">Diseño Gráfico</span>
+      <div class="card-icon">🎨</div>
+      <h2>Paleta Cromática</h2>
+      <p>Extrae una paleta de colores hexadecimales perfecta desde cualquier imagen. Ideal para diseñadores y desarrolladores web.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="img_compressor.html" class="card">
-      <span class="badge" style="border-color:#ffaa00; color:#ffaa00;">Utilidad Web</span>
-      <h2>🗜 Compresor Z-Max</h2>
-      <p>Reduce drásticamente los MBs de tus fotos regulando la calidad sin perder tanta resolución. 100% offline.</p>
+      <span class="badge" style="border-color:#ffaa00;color:#ffaa00;">Utilidad Web</span>
+      <div class="card-icon">🗜️</div>
+      <h2>Compresor Z-Max</h2>
+      <p>Reduce el tamaño de tus fotos sin perder calidad visible. Procesa múltiples imágenes offline, sin subir nada a la nube.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="qr_generator.html" class="card">
-      <span class="badge" style="border-color:#fff; color:#fff;">Marketing</span>
-      <h2>📱 QR Generator</h2>
-      <p>Convierte URLs, canales de YouTube o texto en códigos QR escaneables de alta fiabilidad instantáneamente.</p>
+      <span class="badge" style="border-color:#fff;color:#fff;">Marketing</span>
+      <div class="card-icon">📱</div>
+      <h2>QR Generator Pro</h2>
+      <p>Convierte cualquier URL, texto, contacto o red Wi-Fi en un código QR escaneable de alta resolución. Descarga en PNG.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="base64_converter.html" class="card">
-      <span class="badge" style="border-color:#ff003c; color:#ff003c;">Desarrollo</span>
-      <h2>🤖 Base64 Encoder</h2>
-      <p>Transcribe imágenes o cualquier archivo a puro código de texto Base64 para usarlos internamente en tu código, 100% seguro.</p>
+      <span class="badge" style="border-color:#ff003c;color:#ff003c;">Desarrollo</span>
+      <div class="card-icon">🤖</div>
+      <h2>Base64 Encoder</h2>
+      <p>Convierte imágenes o archivos a código Base64 para embeber en HTML, CSS o código fuente. Rápido y 100% seguro.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
     <a href="watermark_remover.html" class="card">
-      <span class="badge" style="border-color:#fff; color:#fff; background:rgba(255,255,255,0.1)">Retoque Foto</span>
-      <h2>🧽 Borrador de Marcas</h2>
-      <p>Elimina marcas de agua, textos o imperfecciones en las fotos clonando píxeles circundantes de forma hiper natural.</p>
+      <span class="badge" style="border-color:#c0c0ff;color:#c0c0ff;">Retoque Foto</span>
+      <div class="card-icon">🧽</div>
+      <h2>Borrador de Marcas</h2>
+      <p>Elimina marcas de agua, logos o imperfecciones de fotos clonando píxeles circundantes. Sin subir archivos a ningún servidor.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
-    
-    <!-- APP 12: WEB ANTIVIRUS SCANNER -->
     <a href="antivirus_web.html" class="card">
-      <span class="badge" style="border-color:#00f5ff; color:#00f5ff;">Ciberseguridad Local</span>
-      <h2>🛡️ Omega Web Scanner</h2>
-      <p>El único antivirus heurístico que ejecuta el análisis estático de carpetas y archivos locales en tu PC agresivamente desde el navegador.</p>
+      <span class="badge" style="border-color:#00f5ff;color:#00f5ff;">Ciberseguridad</span>
+      <div class="card-icon">🛡️</div>
+      <h2>Omega Web Scanner</h2>
+      <p>Analiza archivos de tu PC buscando patrones maliciosos conocidos. El único antivirus heurístico que corre desde el navegador.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
     </a>
   </div>
+</section>
 
-  <div class="ad-banner" style="height: 250px;">[ GOOGLE ADSENSE RECTANGULAR BLOCK ]</div>
+<div class="ad-strip">
+  <div class="ad-wrap">
+    <div class="ad-label">Publicidad</div>
+    <div class="ad-container">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3189672198116367" data-ad-slot="SLOT_MID" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+</div>
 
-  <footer>
-    <p>&copy; 2026 Toolbox Omega | Red AdSense. Herramientas seguras. Construido con IA.</p>
-  </footer>
+<section id="por-que" style="background:var(--bg2)">
+  <div class="section-title">
+    <h2>¿Por qué elegir Toolbox Omega?</h2>
+    <p>Sin apps que instalar, sin datos que entregar, sin tarjeta de crédito. Solo herramientas que funcionan.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card"><div class="icon">🔒</div><h3>100% Privado</h3><p>Todo el procesamiento ocurre en tu dispositivo. Tus archivos, imágenes y voz nunca salen de tu navegador hacia nuestros servidores.</p></div>
+    <div class="why-card"><div class="icon">⚡</div><h3>Ultra Rápido</h3><p>Sin servidores que esperar. Las herramientas cargan en segundos y procesan en tiempo real usando WebGL y Web Workers.</p></div>
+    <div class="why-card"><div class="icon">🆓</div><h3>Siempre Gratis</h3><p>Ninguna herramienta tiene límite de uso ni requiere registro. Úsalas tantas veces como quieras, sin restricciones ni suscripciones.</p></div>
+    <div class="why-card"><div class="icon">📱</div><h3>Móvil y Desktop</h3><p>Diseño responsive optimizado para Chrome, Safari y Firefox. Funciona igual en PC, tablet o smartphone Android e iOS.</p></div>
+  </div>
+</section>
+
+<section id="arcade">
+  <div class="section-title"><h2>🕹️ Zona Arcade</h2><p>Toma un descanso. Juegos clásicos optimizados que no consumen batería.</p></div>
+  <div class="grid" style="max-width:380px;margin:0 auto">
+    <a href="snake.html" class="card">
+      <span class="badge" style="border-color:#ffcc00;color:#ffcc00;">Retro Gaming</span>
+      <div class="card-icon">🐍</div>
+      <h2>Snake Clásico</h2>
+      <p>Revive la nostalgia del Snake original. Control táctil para móvil y flechas del teclado para PC. Dificultad progresiva.</p>
+      <span class="card-cta">JUGAR AHORA →</span>
+    </a>
+  </div>
+</section>
+
+<div class="ad-strip">
+  <div class="ad-wrap">
+    <div class="ad-label">Publicidad</div>
+    <div class="ad-container">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3189672198116367" data-ad-slot="SLOT_BTM" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">TOOLBOX OMEGA</div>
+  <p class="footer-desc">La colección de herramientas web más completa, gratuita y privada. Construida con tecnologías de inteligencia artificial de última generación.</p>
+  <div class="footer-links">
+    <a href="politicas.html">Política de Privacidad</a>
+    <a href="politicas.html#terminos">Términos de Uso</a>
+    <a href="contacto.html">Contacto</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Toolbox Omega. Todos los derechos reservados.</p>
+</footer>
 
 </body>
 </html>
