@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2048 | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;user-select:none}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+.hud{display:flex;gap:16px;margin-bottom:12px}
+.score-box{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 20px;text-align:center;min-width:80px}
+.score-label{font-size:.7rem;color:#94a3b8;text-transform:uppercase}
+.score-val{font-size:1.3rem;font-weight:700;color:#f59e0b}
+.board{background:rgba(255,255,255,.06);border-radius:10px;padding:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:320px}
+.cell{width:68px;height:68px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);transition:all .1s}
+.controls{margin-top:14px;display:flex;gap:10px}
+.btn{background:#7c3aed;border:none;color:#fff;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600}
+.d-pad{display:grid;grid-template-columns:repeat(3,48px);gap:4px;margin-top:10px}
+.d-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#e2e8f0;font-size:1.3rem;cursor:pointer;height:48px;display:flex;align-items:center;justify-content:center}
+.d-btn:active{background:rgba(124,58,237,.4)}
+.win-msg{display:none;margin-top:12px;padding:12px 24px;background:rgba(0,245,255,.08);border:1px solid rgba(0,245,255,.3);border-radius:10px;font-size:1.1rem;font-weight:600;color:#00f5ff;text-align:center}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🔢 2048</h1>
+<p class="sub">Une los números iguales para llegar a 2048</p>
+<div class="hud">
+<div class="score-box"><div class="score-label">Puntos</div><div class="score-val" id="score">0</div></div>
+<div class="score-box"><div class="score-label">Mejor</div><div class="score-val" id="best">0</div></div>
+</div>
+<div class="board" id="board"></div>
+<div class="win-msg" id="winMsg">🎉 ¡Llegaste a 2048!</div>
+<div class="controls"><button class="btn" onclick="newGame()">🔄 Nueva</button></div>
+<div class="d-pad">
+<div></div><div class="d-btn" onclick="shift(0,-1)">▲</div><div></div>
+<div class="d-btn" onclick="shift(-1,0)">◄</div><div></div><div class="d-btn" onclick="shift(1,0)">►</div>
+<div></div><div class="d-btn" onclick="shift(0,1)">▼</div><div></div>
+</div>
+<script>
+const COLORS={0:'rgba(255,255,255,.04)',2:'#1e3a5f',4:'#1e4a6f',8:'#1a5f3f',16:'#2d6a1a',32:'#6d2d19',64:'#7c2d19',128:'#854d0e',256:'#713f12',512:'#5b21b6',1024:'#4c1d95',2048:'#1d4ed8'};
+const TEXT={0:'',2:'#93c5fd',4:'#7dd3fc',8:'#6ee7b7',16:'#86efac',32:'#fca5a5',64:'#f87171',128:'#fde68a',256:'#fcd34d',512:'#c4b5fd',1024:'#a78bfa',2048:'#fff'};
+let grid,score,best=0,won=false;
+function newGame(){
+  grid=Array.from({length:4},()=>Array(4).fill(0));
+  score=0;won=false;
+  document.getElementById('score').textContent=0;
+  document.getElementById('winMsg').style.display='none';
+  addTile();addTile();render();
+}
+function empty(){const e=[];grid.forEach((r,i)=>r.forEach((v,j)=>{if(!v)e.push([i,j])}));return e}
+function addTile(){const e=empty();if(!e.length)return;const[r,c]=e[Math.floor(Math.random()*e.length)];grid[r][c]=Math.random()<.9?2:4}
+function render(){
+  const b=document.getElementById('board');b.innerHTML='';
+  grid.forEach(row=>row.forEach(v=>{
+    const cell=document.createElement('div');
+    cell.className='cell';
+    cell.style.background=COLORS[v]||COLORS[2048];
+    cell.style.color=TEXT[v]||'#fff';
+    cell.style.fontSize=v>=1000?'1rem':v>=100?'1.2rem':'1.4rem';
+    cell.textContent=v||'';
+    b.appendChild(cell);
+  }));
+}
+function compress(row){let r=row.filter(v=>v);while(r.length<4)r.push(0);return r}
+function merge(row){
+  for(let i=0;i<3;i++){if(row[i]&&row[i]===row[i+1]){row[i]*=2;score+=row[i];row[i+1]=0;if(row[i]===2048&&!won){won=true;document.getElementById('winMsg').style.display='block'}}}
+  return row;
+}
+function shift(dx,dy){
+  let moved=false;
+  const g=grid.map(r=>[...r]);
+  if(dy===0){// horizontal
+    for(let r=0;r<4;r++){
+      let row=dx<0?compress(grid[r]):compress(grid[r]).reverse();
+      row=compress(merge(row));
+      if(dx>0)row.reverse();
+      row.forEach((v,c)=>{if(grid[r][c]!==v)moved=true;grid[r][c]=v});
+    }
+  }else{
+    for(let c=0;c<4;c++){
+      let col=grid.map(r=>r[c]);
+      col=dy<0?compress(col):compress(col).reverse();
+      col=compress(merge(col));
+      if(dy>0)col.reverse();
+      col.forEach((v,r)=>{if(grid[r][c]!==v)moved=true;grid[r][c]=v});
+    }
+  }
+  if(moved){addTile();document.getElementById('score').textContent=score;if(score>best){best=score;document.getElementById('best').textContent=best}}
+  render();
+  // check game over
+  if(!empty().length){
+    let ok=false;
+    for(let r=0;r<4;r++)for(let c=0;c<4;c++){
+      if(c<3&&grid[r][c]===grid[r][c+1])ok=true;
+      if(r<3&&grid[r][c]===grid[r+1][c])ok=true;
+    }
+    if(!ok)alert('¡Sin movimientos! Puntos: '+score);
+  }
+}
+// touch
+let tx,ty;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<30)return;
+  if(Math.abs(dx)>Math.abs(dy))shift(dx<0?-1:1,0);
+  else shift(0,dy<0?-1:1);
+},{passive:true});
+document.addEventListener('keydown',e=>{
+  const m={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+  if(m[e.key]){e.preventDefault();shift(...m[e.key])}
+});
+newGame();
+</script>
+</body></html>

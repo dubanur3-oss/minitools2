@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tetris | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+.game-wrap{display:flex;gap:20px;align-items:flex-start}
+canvas{border:2px solid rgba(0,245,255,.3);border-radius:8px;background:#0a0a18}
+.panel{display:flex;flex-direction:column;gap:12px;min-width:110px}
+.stat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px}
+.stat-label{font-size:.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-val{font-size:1.4rem;font-weight:700;color:#00f5ff}
+.next-canvas{background:#0a0a18;border:1px solid rgba(255,255,255,.1);border-radius:6px}
+.controls{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn{background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:#e2e8f0;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.btn:hover,.btn.primary{background:#7c3aed;border-color:#7c3aed}
+.d-pad{display:grid;grid-template-columns:repeat(3,44px);gap:4px;margin-top:8px}
+.d-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#e2e8f0;font-size:1.1rem;cursor:pointer;height:44px;display:flex;align-items:center;justify-content:center}
+.d-btn:active{background:rgba(124,58,237,.4)}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🟦 Tetris</h1>
+<p class="sub">Encaja las piezas y completa líneas</p>
+<div class="game-wrap">
+<canvas id="c" width="200" height="400"></canvas>
+<div class="panel">
+  <div class="stat"><div class="stat-label">Puntos</div><div class="stat-val" id="score">0</div></div>
+  <div class="stat"><div class="stat-label">Líneas</div><div class="stat-val" id="lines">0</div></div>
+  <div class="stat"><div class="stat-label">Nivel</div><div class="stat-val" id="level">1</div></div>
+  <div class="stat"><div class="stat-label">Siguiente</div><canvas class="next-canvas" id="next" width="80" height="80"></canvas></div>
+</div>
+</div>
+<div class="controls">
+<button class="btn primary" onclick="start()">▶ Nuevo</button>
+<button class="btn" onclick="togglePause()">⏸ Pausa</button>
+</div>
+<div class="d-pad">
+<div class="d-btn" onclick="move(-1)">◄</div>
+<div class="d-btn" onclick="drop()">▼▼</div>
+<div class="d-btn" onclick="move(1)">►</div>
+<div></div><div class="d-btn" onclick="rotate()">↻</div><div></div>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const nc=document.getElementById('next'),nctx=nc.getContext('2d');
+const W=10,H=20,S=20;
+const COLORS=['','#00f5ff','#f59e0b','#a855f7','#22c55e','#ef4444','#3b82f6','#f97316'];
+const PIECES=[
+  [[1,1,1,1]],
+  [[2,2],[2,2]],
+  [[0,3,0],[3,3,3]],
+  [[0,4,4],[4,4,0]],
+  [[5,5,0],[0,5,5]],
+  [[6,0,0],[6,6,6]],
+  [[0,0,7],[7,7,7]]
+];
+let board,piece,pieceX,pieceY,next,score,lines,level,loop,paused,running;
+function newBoard(){return Array.from({length:H},()=>Array(W).fill(0))}
+function randPiece(){return PIECES[Math.floor(Math.random()*PIECES.length)].map(r=>[...r])}
+function valid(p,x,y){
+  for(let r=0;r<p.length;r++)for(let c=0;c<p[r].length;c++){
+    if(!p[r][c])continue;
+    const nx=x+c,ny=y+r;
+    if(nx<0||nx>=W||ny>=H)return false;
+    if(ny>=0&&board[ny][nx])return false;
+  }
+  return true;
+}
+function place(){
+  for(let r=0;r<piece.length;r++)for(let c=0;c<piece[r].length;c++){
+    if(piece[r][c])board[pieceY+r][pieceX+c]=piece[r][c];
+  }
+  // clear lines
+  let cleared=0;
+  for(let r=H-1;r>=0;r--){
+    if(board[r].every(v=>v)){board.splice(r,1);board.unshift(Array(W).fill(0));cleared++;r++}
+  }
+  if(cleared){
+    const pts=[0,100,300,500,800];
+    score+=pts[cleared]*level;
+    lines+=cleared;
+    level=Math.floor(lines/10)+1;
+    document.getElementById('score').textContent=score;
+    document.getElementById('lines').textContent=lines;
+    document.getElementById('level').textContent=level;
+    clearInterval(loop);loop=setInterval(tick,Math.max(80,500-level*40));
+  }
+  piece=next;pieceX=Math.floor(W/2)-Math.floor(piece[0].length/2);pieceY=0;
+  next=randPiece();drawNext();
+  if(!valid(piece,pieceX,pieceY)){running=false;clearInterval(loop);alert('Game Over! Puntos: '+score)}
+}
+function drawBlock(ct,x,y,color,size){
+  ct.fillStyle=color;
+  ct.fillRect(x*size+1,y*size+1,size-2,size-2);
+  ct.fillStyle='rgba(255,255,255,0.2)';
+  ct.fillRect(x*size+1,y*size+1,size-2,3);
+}
+function draw(){
+  ctx.fillStyle='#0a0a18';ctx.fillRect(0,0,cv.width,cv.height);
+  // grid lines
+  ctx.strokeStyle='rgba(255,255,255,0.04)';
+  for(let x=0;x<=W;x++){ctx.beginPath();ctx.moveTo(x*S,0);ctx.lineTo(x*S,H*S);ctx.stroke()}
+  for(let y=0;y<=H;y++){ctx.beginPath();ctx.moveTo(0,y*S);ctx.lineTo(W*S,y*S);ctx.stroke()}
+  board.forEach((row,r)=>row.forEach((v,c)=>{if(v)drawBlock(ctx,c,r,COLORS[v],S)}));
+  // ghost
+  let gy=pieceY;
+  while(valid(piece,pieceX,gy+1))gy++;
+  if(gy!==pieceY){
+    for(let r=0;r<piece.length;r++)for(let c=0;c<piece[r].length;c++){
+      if(piece[r][c]){ctx.fillStyle='rgba(255,255,255,0.1)';ctx.fillRect((pieceX+c)*S+1,(gy+r)*S+1,S-2,S-2)}
+    }
+  }
+  for(let r=0;r<piece.length;r++)for(let c=0;c<piece[r].length;c++){
+    if(piece[r][c])drawBlock(ctx,pieceX+c,pieceY+r,COLORS[piece[r][c]],S);
+  }
+}
+function drawNext(){
+  nctx.fillStyle='#0a0a18';nctx.fillRect(0,0,nc.width,nc.height);
+  const s=16,ox=Math.floor((nc.width-next[0].length*s)/2),oy=Math.floor((nc.height-next.length*s)/2);
+  next.forEach((row,r)=>row.forEach((v,c)=>{if(v){nctx.fillStyle=COLORS[v];nctx.fillRect(ox+c*s+1,oy+r*s+1,s-2,s-2)}}));
+}
+function tick(){if(!paused&&running){if(valid(piece,pieceX,pieceY+1))pieceY++;else place();draw()}}
+function move(d){if(!running||paused)return;if(valid(piece,pieceX+d,pieceY)){pieceX+=d;draw()}}
+function drop(){if(!running||paused)return;while(valid(piece,pieceX,pieceY+1))pieceY++;place();draw()}
+function rotate(){
+  if(!running||paused)return;
+  const rot=piece[0].map((_,c)=>piece.map(r=>r[c]).reverse());
+  if(valid(rot,pieceX,pieceY)){piece=rot;draw()}
+}
+function togglePause(){if(running)paused=!paused}
+function start(){
+  board=newBoard();score=0;lines=0;level=1;paused=false;running=true;
+  document.getElementById('score').textContent=0;
+  document.getElementById('lines').textContent=0;
+  document.getElementById('level').textContent=1;
+  piece=randPiece();next=randPiece();
+  pieceX=Math.floor(W/2)-Math.floor(piece[0].length/2);pieceY=0;
+  drawNext();clearInterval(loop);loop=setInterval(tick,500);draw();
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'){e.preventDefault();move(-1)}
+  if(e.key==='ArrowRight'){e.preventDefault();move(1)}
+  if(e.key==='ArrowDown'){e.preventDefault();if(valid(piece,pieceX,pieceY+1)){pieceY++;draw()}}
+  if(e.key==='ArrowUp'||e.key==='z'){e.preventDefault();rotate()}
+  if(e.key===' '){e.preventDefault();drop()}
+  if(e.key==='p')togglePause();
+});
+start();
+</script>
+</body></html>

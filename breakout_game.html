@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Breakout | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+.hud{display:flex;gap:24px;margin-bottom:8px;font-size:.95rem}
+.hud span{color:#f59e0b;font-weight:700}
+canvas{border:2px solid rgba(0,245,255,.25);border-radius:8px;background:#0a0a18;touch-action:none}
+.controls{margin-top:12px;display:flex;gap:10px}
+.btn{background:#7c3aed;border:none;color:#fff;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600}
+.hint{margin-top:8px;color:#475569;font-size:.8rem}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🧱 Breakout</h1>
+<p class="sub">Rompe todos los bloques</p>
+<div class="hud">Puntos: <span id="score">0</span> &nbsp; Vidas: <span id="lives">3</span> &nbsp; Nivel: <span id="level">1</span></div>
+<canvas id="c" width="400" height="480"></canvas>
+<div class="controls"><button class="btn" onclick="startGame()">▶ Jugar</button><button class="btn" onclick="togglePause()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#e2e8f0">⏸</button></div>
+<p class="hint">Mouse/touch para mover • Espacio = pausa</p>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=cv.width,H=cv.height;
+let paddle,ball,bricks,score,lives,level,raf,paused,running,started;
+const COLS=10,ROWS=5,BW=34,BH=14,GAP=2;
+const ROW_COLORS=['#ef4444','#f97316','#f59e0b','#22c55e','#3b82f6'];
+function initLevel(){
+  const offX=(W-(COLS*(BW+GAP)-GAP))/2;
+  bricks=[];
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const hits=r<2?2:1;
+    bricks.push({x:offX+c*(BW+GAP),y:40+r*(BH+GAP),w:BW,h:BH,hp:hits,color:ROW_COLORS[r]});
+  }
+  const speed=3+level*.4;
+  ball={x:W/2,y:H-80,vx:(Math.random()>.5?1:-1)*speed,vy:-speed-1,r:7};
+}
+function init(){
+  paddle={x:W/2-40,y:H-30,w:80,h=10};
+  score=0;lives=3;level=1;
+  document.getElementById('score').textContent=0;
+  document.getElementById('lives').textContent=3;
+  document.getElementById('level').textContent=1;
+  initLevel();
+}
+function draw(){
+  ctx.fillStyle='#0a0a18';ctx.fillRect(0,0,W,H);
+  // bricks
+  bricks.forEach(b=>{
+    if(!b.hp)return;
+    ctx.fillStyle=b.hp>1?'#fff':b.color;
+    ctx.fillRect(b.x,b.y,b.w,b.h);
+    ctx.fillStyle=b.hp>1?b.color:'rgba(255,255,255,.15)';
+    ctx.fillRect(b.x+2,b.y+2,b.w-4,b.h-4);
+  });
+  // paddle
+  const g=ctx.createLinearGradient(paddle.x,paddle.y,paddle.x,paddle.y+paddle.h);
+  g.addColorStop(0,'#00f5ff');g.addColorStop(1,'#7c3aed');
+  ctx.fillStyle=g;
+  ctx.beginPath();ctx.roundRect?ctx.roundRect(paddle.x,paddle.y,paddle.w,paddle.h,5):ctx.fillRect(paddle.x,paddle.y,paddle.w,paddle.h);
+  ctx.fill();
+  // ball
+  const bg=ctx.createRadialGradient(ball.x-2,ball.y-2,1,ball.x,ball.y,ball.r);
+  bg.addColorStop(0,'#fff');bg.addColorStop(1,'#00f5ff');
+  ctx.fillStyle=bg;
+  ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();
+  // glow
+  ctx.shadowColor='#00f5ff';ctx.shadowBlur=12;ctx.fill();ctx.shadowBlur=0;
+  if(!running){
+    ctx.fillStyle='rgba(12,10,19,.7)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#00f5ff';ctx.font='bold 28px Segoe UI';ctx.textAlign='center';
+    ctx.fillText(started?'PAUSA':'BREAKOUT',W/2,H/2-20);
+    ctx.fillStyle='#94a3b8';ctx.font='16px Segoe UI';
+    ctx.fillText('Haz clic para '+(!started?'empezar':'continuar'),W/2,H/2+20);
+    ctx.textAlign='left';
+  }
+}
+function update(){
+  ball.x+=ball.vx;ball.y+=ball.vy;
+  if(ball.x-ball.r<0){ball.x=ball.r;ball.vx=Math.abs(ball.vx)}
+  if(ball.x+ball.r>W){ball.x=W-ball.r;ball.vx=-Math.abs(ball.vx)}
+  if(ball.y-ball.r<0){ball.y=ball.r;ball.vy=Math.abs(ball.vy)}
+  // paddle
+  if(ball.y+ball.r>paddle.y&&ball.y-ball.r<paddle.y+paddle.h&&ball.x>paddle.x&&ball.x<paddle.x+paddle.w){
+    ball.vy=-Math.abs(ball.vy);
+    ball.vx+=(ball.x-(paddle.x+paddle.w/2))*.1;
+    ball.y=paddle.y-ball.r;
+  }
+  // bricks
+  for(let b of bricks){
+    if(!b.hp)continue;
+    if(ball.x+ball.r>b.x&&ball.x-ball.r<b.x+b.w&&ball.y+ball.r>b.y&&ball.y-ball.r<b.y+b.h){
+      b.hp--;
+      score+=b.hp===0?20:5;
+      document.getElementById('score').textContent=score;
+      const overlapL=ball.x+ball.r-b.x,overlapR=b.x+b.w-ball.x+ball.r;
+      const overlapT=ball.y+ball.r-b.y,overlapB=b.y+b.h-(ball.y-ball.r);
+      if(Math.min(overlapL,overlapR)<Math.min(overlapT,overlapB))ball.vx*=-1;
+      else ball.vy*=-1;
+      break;
+    }
+  }
+  // lost ball
+  if(ball.y-ball.r>H){
+    lives--;document.getElementById('lives').textContent=lives;
+    if(lives<=0){running=false;alert('Game Over! Puntos: '+score);return}
+    ball={x:paddle.x+paddle.w/2,y:paddle.y-20,vx:(Math.random()>.5?1:-1)*(3+level*.4),vy:-(3+level*.4)-1,r:7};
+  }
+  // next level
+  if(bricks.every(b=>!b.hp)){
+    level++;document.getElementById('level').textContent=level;
+    initLevel();
+  }
+}
+function loop(){if(running&&!paused){update()}; draw();raf=requestAnimationFrame(loop)}
+function startGame(){cancelAnimationFrame(raf);init();running=true;started=true;paused=false;loop()}
+function togglePause(){if(!started)return;running=!running;paused=!running;if(running){raf=requestAnimationFrame(loop)}}
+// mouse/touch
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();paddle.x=e.clientX-r.left-paddle.w/2;paddle.x=Math.max(0,Math.min(W-paddle.w,paddle.x))});
+cv.addEventListener('touchmove',e=>{e.preventDefault();const r=cv.getBoundingClientRect();paddle.x=e.touches[0].clientX-r.left-paddle.w/2;paddle.x=Math.max(0,Math.min(W-paddle.w,paddle.x))},{passive:false});
+cv.addEventListener('click',()=>{if(!started)startGame();else togglePause()});
+document.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();if(!started)startGame();else togglePause()}});
+// init display
+init();paused=true;running=false;started=false;draw();
+</script>
+</body></html>

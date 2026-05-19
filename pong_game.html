@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pong | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+.diff{display:flex;gap:8px;margin-bottom:10px}
+.d-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.82rem}
+.d-btn.active{background:#7c3aed;border-color:#7c3aed;color:#fff}
+canvas{border:2px solid rgba(0,245,255,.2);border-radius:8px;background:#050510;display:block}
+.hint{margin-top:8px;color:#475569;font-size:.8rem}
+.controls{display:flex;gap:10px;margin-top:10px}
+.btn{background:#7c3aed;border:none;color:#fff;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🏓 Pong</h1>
+<p class="sub">Clásico ping-pong vs IA</p>
+<div class="diff">
+<button class="d-btn active" onclick="setDiff('easy',this)">Fácil</button>
+<button class="d-btn" onclick="setDiff('medium',this)">Medio</button>
+<button class="d-btn" onclick="setDiff('hard',this)">Difícil</button>
+</div>
+<canvas id="c" width="500" height="360"></canvas>
+<p class="hint">Arrastra el mouse • en móvil: toca y arrastra</p>
+<div class="controls"><button class="btn" onclick="startGame()">▶ Nuevo</button></div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=500,H=360,PW=12,PH=70,BR=8;
+let player,ai,ball,scoreP,scoreAI,running,aiSpeed=3;
+function setDiff(d,btn){
+  const speeds={easy:2,medium:4,hard:6};aiSpeed=speeds[d];
+  document.querySelectorAll('.d-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+}
+function reset(){
+  ball={x:W/2,y:H/2,vx:(Math.random()>.5?1:-1)*5,vy:(Math.random()-.5)*6,r:BR};
+  player={x:16,y:H/2-PH/2,w:PW,h:PH};
+  ai={x:W-16-PW,y:H/2-PH/2,w:PW,h:PH};
+}
+function startGame(){scoreP=0;scoreAI=0;running=true;reset();updateScore()}
+function updateScore(){ctx.fillStyle='#1e1b4b';ctx.fillRect(0,0,W,H)}
+function draw(){
+  // bg
+  ctx.fillStyle='#050510';ctx.fillRect(0,0,W,H);
+  // center line
+  ctx.setLineDash([8,8]);ctx.strokeStyle='rgba(255,255,255,0.1)';
+  ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.stroke();ctx.setLineDash([]);
+  // scores
+  ctx.fillStyle='rgba(255,255,255,0.15)';ctx.font='bold 64px Segoe UI';ctx.textAlign='center';
+  ctx.fillText(scoreP,W/4,80);ctx.fillText(scoreAI,3*W/4,80);ctx.textAlign='left';
+  // paddles
+  const drawPaddle=(p,color)=>{
+    const g=ctx.createLinearGradient(p.x,p.y,p.x+p.w,p.y+p.h);
+    g.addColorStop(0,color);g.addColorStop(1,'rgba(255,255,255,.5)');
+    ctx.fillStyle=g;
+    ctx.beginPath();ctx.roundRect?ctx.roundRect(p.x,p.y,p.w,p.h,6):ctx.fillRect(p.x,p.y,p.w,p.h);
+    ctx.fill();
+    ctx.shadowColor=color;ctx.shadowBlur=15;ctx.fill();ctx.shadowBlur=0;
+  };
+  drawPaddle(player,'#00f5ff');drawPaddle(ai,'#f59e0b');
+  // ball
+  ctx.fillStyle='#fff';
+  ctx.shadowColor='#fff';ctx.shadowBlur=20;
+  ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;
+  if(!running){
+    ctx.fillStyle='rgba(5,5,16,.75)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#00f5ff';ctx.font='bold 28px Segoe UI';ctx.textAlign='center';
+    ctx.fillText('🏓 PONG',W/2,H/2-20);
+    ctx.fillStyle='#e2e8f0';ctx.font='17px Segoe UI';
+    ctx.fillText('Haz clic en Nuevo para jugar',W/2,H/2+18);ctx.textAlign='left';
+  }
+}
+function update(){
+  ball.x+=ball.vx;ball.y+=ball.vy;
+  if(ball.y-ball.r<0){ball.y=ball.r;ball.vy=Math.abs(ball.vy)}
+  if(ball.y+ball.r>H){ball.y=H-ball.r;ball.vy=-Math.abs(ball.vy)}
+  // player paddle
+  if(ball.x-ball.r<player.x+player.w&&ball.x+ball.r>player.x&&ball.y>player.y&&ball.y<player.y+player.h){
+    ball.vx=Math.abs(ball.vx)+.2;ball.vy+=(ball.y-(player.y+player.h/2))*.1;ball.x=player.x+player.w+ball.r;
+  }
+  // ai paddle
+  if(ball.x+ball.r>ai.x&&ball.x-ball.r<ai.x+ai.w&&ball.y>ai.y&&ball.y<ai.y+ai.h){
+    ball.vx=-(Math.abs(ball.vx)+.2);ball.vy+=(ball.y-(ai.y+ai.h/2))*.1;ball.x=ai.x-ball.r;
+  }
+  // ai move
+  const aiCenter=ai.y+PH/2;
+  if(aiCenter<ball.y-5)ai.y=Math.min(ai.y+aiSpeed,H-PH);
+  else if(aiCenter>ball.y+5)ai.y=Math.max(ai.y-aiSpeed,0);
+  // score
+  if(ball.x<0){scoreAI++;reset();if(scoreAI>=7){running=false;alert('IA gana 7-'+scoreP)}}
+  if(ball.x>W){scoreP++;reset();if(scoreP>=7){running=false;alert('¡Ganaste 7-'+scoreAI+'!')}}
+  ball.vx=Math.max(-12,Math.min(12,ball.vx));
+  ball.vy=Math.max(-10,Math.min(10,ball.vy));
+}
+function loop(){if(running)update();draw();requestAnimationFrame(loop)}
+// mouse
+cv.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();player.y=e.clientY-r.top-PH/2;player.y=Math.max(0,Math.min(H-PH,player.y))});
+cv.addEventListener('touchmove',e=>{e.preventDefault();const r=cv.getBoundingClientRect();player.y=e.touches[0].clientY-r.top-PH/2;player.y=Math.max(0,Math.min(H-PH,player.y))},{passive:false});
+reset();scoreP=0;scoreAI=0;running=false;loop();
+</script>
+</body></html>

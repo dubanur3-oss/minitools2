@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tic-Tac-Toe | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:24px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:16px}
+.mode{display:flex;gap:8px;margin-bottom:14px}
+.mode-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#94a3b8;padding:7px 18px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.mode-btn.active{background:#7c3aed;border-color:#7c3aed;color:#fff}
+.status{height:36px;display:flex;align-items:center;font-size:1.1rem;margin-bottom:12px;font-weight:600;color:#00f5ff}
+.board{display:grid;grid-template-columns:repeat(3,100px);gap:6px}
+.cell{width:100px;height:100px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2.8rem;cursor:pointer;transition:all .15s}
+.cell:hover:not(.taken){background:rgba(124,58,237,.15);border-color:#7c3aed}
+.cell.taken{cursor:default}
+.cell.x{color:#00f5ff}
+.cell.o{color:#f59e0b}
+.cell.win-cell{background:rgba(0,245,255,.1);border-color:#00f5ff;animation:pulse .4s ease}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.scores{display:flex;gap:20px;margin:16px 0}
+.score-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 20px;text-align:center}
+.score-label{font-size:.75rem;color:#94a3b8;text-transform:uppercase}
+.score-val{font-size:1.5rem;font-weight:700}
+.score-box.x .score-val{color:#00f5ff}
+.score-box.o .score-val{color:#f59e0b}
+.score-box.d .score-val{color:#94a3b8}
+.controls{display:flex;gap:10px}
+.btn{background:#7c3aed;border:none;color:#fff;padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600}
+.btn.ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#e2e8f0}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>✖ Tic-Tac-Toe</h1>
+<p class="sub">Tres en raya clásico</p>
+<div class="mode">
+<button class="mode-btn active" onclick="setMode('ai',this)">vs IA</button>
+<button class="mode-btn" onclick="setMode('2p',this)">2 Jugadores</button>
+<button class="mode-btn" onclick="setMode('hard',this)">IA Difícil</button>
+</div>
+<div class="status" id="status">Tu turno ✖</div>
+<div class="board" id="board"></div>
+<div class="scores">
+<div class="score-box x"><div class="score-label">✖ Tú</div><div class="score-val" id="sx">0</div></div>
+<div class="score-box d"><div class="score-label">Empates</div><div class="score-val" id="sd">0</div></div>
+<div class="score-box o"><div class="score-label">○ IA</div><div class="score-val" id="so">0</div></div>
+</div>
+<div class="controls">
+<button class="btn" onclick="reset()">🔄 Nueva</button>
+<button class="btn ghost" onclick="resetScore()">Reset puntos</button>
+</div>
+<script>
+let board=Array(9).fill(''),cur='X',mode='ai',gameOver=false;
+let scores={X:0,O:0,D:0};
+const WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function setMode(m,btn){mode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reset()}
+function render(){
+  const b=document.getElementById('board');b.innerHTML='';
+  board.forEach((v,i)=>{
+    const cell=document.createElement('div');
+    cell.className='cell'+(v?' taken '+v.toLowerCase():'');
+    cell.textContent=v;
+    if(!v&&!gameOver)cell.addEventListener('click',()=>play(i));
+    b.appendChild(cell);
+  });
+}
+function checkWin(b,p){return WINS.find(w=>w.every(i=>b[i]===p))}
+function play(i){
+  if(board[i]||gameOver)return;
+  board[i]=cur;render();
+  const w=checkWin(board,cur);
+  if(w){highlight(w);end(cur+' gana');scores[cur]++;return}
+  if(board.every(v=>v)){end('Empate');scores.D++;return}
+  cur=cur==='X'?'O':'X';
+  updateStatus();
+  if((mode==='ai'||mode==='hard')&&cur==='O')setTimeout(aiMove,300);
+}
+function aiMove(){
+  if(gameOver)return;
+  let idx;
+  if(mode==='hard'){
+    // minimax
+    idx=minimax(board,'O').idx;
+  }else{
+    // simple: win or block or random
+    idx=findBest('O')||findBest('X')||randEmpty();
+  }
+  if(idx!==null&&idx!==undefined)play(idx);
+}
+function findBest(p){
+  for(let w of WINS){
+    const empty=w.filter(i=>!board[i]),filled=w.filter(i=>board[i]===p);
+    if(filled.length===2&&empty.length===1)return empty[0];
+  }return null;
+}
+function randEmpty(){const e=board.map((v,i)=>v?null:i).filter(v=>v!==null);return e[Math.floor(Math.random()*e.length)]}
+function minimax(b,player){
+  const opp=player==='O'?'X':'O';
+  if(checkWin(b,'O'))return{score:10};
+  if(checkWin(b,'X'))return{score:-10};
+  const emp=b.map((v,i)=>v?null:i).filter(v=>v!==null);
+  if(!emp.length)return{score:0};
+  const moves=emp.map(i=>{const nb=[...b];nb[i]=player;const s=minimax(nb,opp).score;return{idx:i,score:s}});
+  return player==='O'?moves.reduce((a,b)=>b.score>a.score?b:a):moves.reduce((a,b)=>b.score<a.score?b:a);
+}
+function highlight(w){
+  const cells=document.querySelectorAll('.cell');
+  w.forEach(i=>cells[i].classList.add('win-cell'));
+}
+function end(msg){
+  gameOver=true;
+  document.getElementById('status').textContent=msg;
+  document.getElementById('sx').textContent=scores.X;
+  document.getElementById('so').textContent=scores.O;
+  document.getElementById('sd').textContent=scores.D;
+}
+function updateStatus(){
+  const labels={X:'Tu turno ✖',O:(mode==='2p'?'Turno ○':'IA pensando...')};
+  document.getElementById('status').textContent=labels[cur];
+}
+function reset(){board=Array(9).fill('');cur='X';gameOver=false;render();updateStatus()}
+function resetScore(){scores={X:0,O:0,D:0};document.getElementById('sx').textContent=0;document.getElementById('so').textContent=0;document.getElementById('sd').textContent=0;reset()}
+render();updateStatus();
+</script>
+</body></html>

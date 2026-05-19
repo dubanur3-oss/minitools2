@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flappy Bird | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+canvas{border:2px solid rgba(0,245,255,.25);border-radius:8px;display:block;cursor:pointer}
+.hint{margin-top:8px;color:#475569;font-size:.8rem;text-align:center}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🐦 Flappy Bird</h1>
+<p class="sub">Esquiva los tubos</p>
+<canvas id="c" width="360" height="540"></canvas>
+<p class="hint">Toca / Espacio / Click para volar</p>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=360,H=540,GAP=140,PIPE_W=50,SPEED=2.5,GRAVITY=0.45,JUMP=-8;
+let bird,pipes,score,best=0,state,frameCount;
+function init(){
+  bird={x:80,y:H/2,vy:0,r:16,angle:0};
+  pipes=[];score=0;state='start';frameCount=0;
+}
+function flap(){if(state==='dead'){init();state='start';return}state='play';bird.vy=JUMP}
+function addPipe(){
+  const topH=60+Math.random()*(H-GAP-120);
+  pipes.push({x:W+10,topH,scored:false});
+}
+function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}
+function drawBird(){
+  ctx.save();ctx.translate(bird.x,bird.y);
+  ctx.rotate(Math.min(Math.max(bird.vy*3,-30),90)*Math.PI/180);
+  // body
+  ctx.fillStyle='#f59e0b';
+  ctx.beginPath();ctx.ellipse(0,0,bird.r,bird.r*.75,0,0,Math.PI*2);ctx.fill();
+  // wing
+  ctx.fillStyle='#fbbf24';
+  ctx.beginPath();ctx.ellipse(-4,2,bird.r*.5,bird.r*.35,-.3,0,Math.PI*2);ctx.fill();
+  // eye
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(6,-3,5,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1e293b';ctx.beginPath();ctx.arc(7,-3,3,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(8,-4,1,0,Math.PI*2);ctx.fill();
+  // beak
+  ctx.fillStyle='#ef4444';
+  ctx.beginPath();ctx.moveTo(12,1);ctx.lineTo(20,3);ctx.lineTo(12,5);ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+function drawPipe(p){
+  const cap=10;
+  // top
+  const tg=ctx.createLinearGradient(p.x,0,p.x+PIPE_W,0);
+  tg.addColorStop(0,'#166534');tg.addColorStop(.5,'#22c55e');tg.addColorStop(1,'#166534');
+  ctx.fillStyle=tg;ctx.fillRect(p.x,0,PIPE_W,p.topH);
+  ctx.fillStyle='#15803d';ctx.fillRect(p.x-cap,p.topH-30,PIPE_W+cap*2,30);
+  // bottom
+  const bY=p.topH+GAP;
+  ctx.fillStyle=tg;ctx.fillRect(p.x,bY,PIPE_W,H-bY);
+  ctx.fillStyle='#15803d';ctx.fillRect(p.x-cap,bY,PIPE_W+cap*2,30);
+}
+function drawBg(){
+  // sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'#0f172a');sky.addColorStop(1,'#1e1b4b');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+  // stars
+  ctx.fillStyle='rgba(255,255,255,0.5)';
+  for(let i=0;i<30;i++){const x=(i*137+frameCount*.2)%W,y=(i*73)%200;ctx.fillRect(x,y,1.5,1.5)}
+  // ground
+  const gg=ctx.createLinearGradient(0,H-50,0,H);
+  gg.addColorStop(0,'#166534');gg.addColorStop(1,'#052e16');
+  ctx.fillStyle=gg;ctx.fillRect(0,H-50,W,50);
+  ctx.fillStyle='#15803d';ctx.fillRect(0,H-52,W,4);
+}
+function loop(){
+  frameCount++;
+  drawBg();
+  if(state==='play'||state==='dead'){
+    pipes.forEach(drawPipe);
+    if(state==='play'){
+      bird.vy+=GRAVITY;bird.y+=bird.vy;
+      pipes.forEach(p=>{p.x-=SPEED;if(!p.scored&&p.x+PIPE_W<bird.x){p.scored=true;score++;if(score>best)best=score}});
+      pipes=pipes.filter(p=>p.x>-PIPE_W-20);
+      if(frameCount%90===0)addPipe();
+      // collision
+      const hit=pipes.some(p=>{
+        if(bird.x+bird.r>p.x&&bird.x-bird.r<p.x+PIPE_W){
+          if(bird.y-bird.r<p.topH||bird.y+bird.r>p.topH+GAP)return true;
+        }return false;
+      });
+      if(hit||bird.y+bird.r>H-50||bird.y-bird.r<0){state='dead'}
+    }
+  }
+  drawBird();
+  // score
+  ctx.fillStyle='rgba(0,0,0,.5)';ctx.fillRect(W/2-50,12,100,36);
+  ctx.fillStyle='#fff';ctx.font='bold 24px Segoe UI';ctx.textAlign='center';
+  ctx.fillText(score,W/2,38);
+  ctx.textAlign='left';
+  if(state==='start'){
+    ctx.fillStyle='rgba(12,10,19,.75)';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#00f5ff';ctx.font='bold 36px Segoe UI';ctx.textAlign='center';
+    ctx.fillText('🐦 FLAPPY',W/2,H/2-30);
+    ctx.fillStyle='#e2e8f0';ctx.font='18px Segoe UI';
+    ctx.fillText('Toca para volar',W/2,H/2+10);
+    ctx.fillStyle='#94a3b8';ctx.font='14px Segoe UI';
+    ctx.fillText('Récord: '+best,W/2,H/2+40);
+    ctx.textAlign='left';
+  }
+  if(state==='dead'){
+    ctx.fillStyle='rgba(12,10,19,.8)';ctx.fillRect(0,H/2-70,W,140);
+    ctx.fillStyle='#ef4444';ctx.font='bold 28px Segoe UI';ctx.textAlign='center';
+    ctx.fillText('💀 PERDISTE',W/2,H/2-30);
+    ctx.fillStyle='#e2e8f0';ctx.font='18px Segoe UI';
+    ctx.fillText('Puntos: '+score+'  Récord: '+best,W/2,H/2+5);
+    ctx.fillStyle='#00f5ff';ctx.font='16px Segoe UI';
+    ctx.fillText('Toca para reintentar',W/2,H/2+38);
+    ctx.textAlign='left';
+  }
+  requestAnimationFrame(loop);
+}
+cv.addEventListener('click',flap);
+cv.addEventListener('touchstart',e=>{e.preventDefault();flap()},{passive:false});
+document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();flap()}});
+init();addPipe();loop();
+</script>
+</body></html>

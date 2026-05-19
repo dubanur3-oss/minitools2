@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dino Run | Toolbox Omega</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0c0a13;color:#e2e8f0;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh}
+nav{width:100%;background:rgba(12,10,19,.95);border-bottom:1px solid rgba(255,255,255,.08);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{color:#00f5ff;font-weight:700;text-decoration:none}
+.back{color:#94a3b8;text-decoration:none;font-size:.9rem}
+h1{margin:20px 0 4px;font-size:1.8rem;color:#00f5ff}
+.sub{color:#94a3b8;font-size:.9rem;margin-bottom:12px}
+canvas{border:2px solid rgba(0,245,255,.25);border-radius:8px;cursor:pointer;display:block}
+.hint{margin-top:8px;color:#475569;font-size:.8rem}
+</style>
+</head>
+<body>
+<nav><a class="brand" href="index.html">⚡ Toolbox Omega</a><a class="back" href="index.html">← Inicio</a></nav>
+<h1>🦕 Dino Run</h1>
+<p class="sub">Esquiva los obstáculos</p>
+<canvas id="c" width="600" height="200"></canvas>
+<p class="hint">Espacio / Toca para saltar • ↓ para agacharse</p>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+const W=600,H=200,GROUND=160;
+let dino,obstacles,clouds,score,best=0,speed,frame,state,spawnTimer,legAnim;
+const COLORS={sky:'#0f172a',ground:'#1e293b',groundLine:'#334155',dino:'#00f5ff',obs:'#ef4444',cloud:'rgba(255,255,255,0.08)',score:'#94a3b8'};
+function init(){
+  dino={x:60,y:GROUND-40,w:30,h:40,vy:0,ducking:false,onGround:true};
+  obstacles=[];clouds=[];score=0;speed=4;frame=0;spawnTimer=80;legAnim=0;state='start';
+  for(let i=0;i<3;i++)clouds.push({x:Math.random()*W,y:20+Math.random()*40,w:60+Math.random()*40});
+}
+function jump(){if(dino.onGround){dino.vy=-12;dino.onGround=false}}
+function duck(on){dino.ducking=on;dino.h=on?20:40;dino.y=on?GROUND-20:GROUND-40}
+function spawnObs(){
+  const t=Math.random()<.3?'bird':'cactus';
+  if(t==='cactus'){
+    const h=30+Math.floor(Math.random()*3)*15;
+    obstacles.push({x:W+10,y:GROUND-h,w:20,h,type:'cactus'});
+  }else{
+    const h=15,y=GROUND-50-Math.random()*30;
+    obstacles.push({x:W+10,y,w:30,h,type:'bird'});
+  }
+}
+function drawDino(){
+  const d=dino;
+  ctx.fillStyle=COLORS.dino;
+  if(d.ducking){
+    // ducked dino
+    ctx.fillRect(d.x,d.y,d.w+10,d.h);
+    ctx.fillStyle='#0a0a18';ctx.fillRect(d.x+d.w,d.y+4,6,6);// eye
+    ctx.fillStyle=COLORS.dino;
+  }else{
+    // body
+    ctx.fillRect(d.x,d.y,d.w,d.h-10);
+    // head
+    ctx.fillRect(d.x+10,d.y-14,22,16);
+    // eye
+    ctx.fillStyle='#0a0a18';ctx.fillRect(d.x+26,d.y-11,4,4);
+    ctx.fillStyle=COLORS.dino;
+    // legs
+    const l=Math.floor(legAnim/8)%2;
+    if(d.onGround){ctx.fillRect(d.x+5+l*8,d.y+d.h-10,8,10);ctx.fillRect(d.x+13+(1-l)*8,d.y+d.h-10,8,10)}
+    else{ctx.fillRect(d.x+5,d.y+d.h-10,8,8);ctx.fillRect(d.x+17,d.y+d.h-6,8,6)}
+    // tail
+    ctx.fillRect(d.x-8,d.y+4,10,8);
+  }
+}
+function drawObs(o){
+  if(o.type==='cactus'){
+    ctx.fillStyle='#16a34a';
+    ctx.fillRect(o.x+6,o.y,8,o.h);// trunk
+    ctx.fillRect(o.x,o.y+8,o.w,8);// arms
+    ctx.fillRect(o.x,o.y,6,14);
+    ctx.fillRect(o.x+14,o.y,6,14);
+  }else{
+    ctx.fillStyle='#f97316';
+    ctx.fillRect(o.x,o.y+5,o.w,o.h-5);
+    ctx.fillRect(o.x+5,o.y,o.w-10,o.h);
+    // wing
+    const wf=Math.floor(frame/10)%2;
+    ctx.fillRect(o.x+5,o.y+(wf?-8:-4),o.w-10,8);
+  }
+}
+function loop(){
+  frame++;legAnim++;
+  // bg
+  ctx.fillStyle=COLORS.sky;ctx.fillRect(0,0,W,H);
+  // clouds
+  clouds.forEach(c=>{
+    ctx.fillStyle=COLORS.cloud;ctx.fillRect(c.x,c.y,c.w,20);
+    ctx.fillRect(c.x+10,c.y-10,c.w-20,10);
+    c.x-=.5;if(c.x<-c.w)c.x=W+10;
+  });
+  // ground
+  ctx.fillStyle=COLORS.ground;ctx.fillRect(0,GROUND,W,H-GROUND);
+  ctx.fillStyle=COLORS.groundLine;ctx.fillRect(0,GROUND,W,2);
+  if(state==='play'||state==='dead'){
+    obstacles.forEach(drawObs);
+    drawDino();
+    // score
+    ctx.fillStyle=COLORS.score;ctx.font='14px monospace';ctx.textAlign='right';
+    ctx.fillText('HI '+best,W-10,24);ctx.fillText(score,W-80,24);ctx.textAlign='left';
+    if(state==='play'){
+      dino.vy+=0.7;dino.y+=dino.vy;
+      if(dino.y>=GROUND-dino.h){dino.y=GROUND-dino.h;dino.vy=0;dino.onGround=true}
+      speed+=0.002;
+      obstacles.forEach(o=>o.x-=speed);
+      obstacles=obstacles.filter(o=>o.x>-60);
+      spawnTimer--;if(spawnTimer<=0){spawnObs();spawnTimer=70+Math.floor(Math.random()*60)}
+      score=Math.floor(frame/6);if(score>best)best=score;
+      // collision
+      for(const o of obstacles){
+        if(dino.x+dino.w-4>o.x+4&&dino.x+4<o.x+o.w-4&&dino.y+dino.h-4>o.y+4&&dino.y+4<o.y+o.h-4){
+          state='dead';break;
+        }
+      }
+    }
+  }else{
+    drawDino();
+  }
+  if(state==='start'){
+    ctx.fillStyle='rgba(12,10,19,.7)';ctx.fillRect(0,40,W,80);
+    ctx.fillStyle='#00f5ff';ctx.font='bold 22px Segoe UI';ctx.textAlign='center';
+    ctx.fillText('🦕 DINO RUN',W/2,72);
+    ctx.fillStyle='#e2e8f0';ctx.font='15px Segoe UI';
+    ctx.fillText('Toca o Espacio para correr',W/2,100);ctx.textAlign='left';
+  }
+  if(state==='dead'){
+    ctx.fillStyle='rgba(12,10,19,.75)';ctx.fillRect(0,50,W,80);
+    ctx.fillStyle='#ef4444';ctx.font='bold 20px Segoe UI';ctx.textAlign='center';
+    ctx.fillText('💀 GAME OVER — Puntos: '+score,W/2,82);
+    ctx.fillStyle='#e2e8f0';ctx.font='14px Segoe UI';
+    ctx.fillText('Toca para reintentar',W/2,108);ctx.textAlign='left';
+  }
+  requestAnimationFrame(loop);
+}
+function action(){if(state==='start'){state='play'}else if(state==='dead'){init();state='play'}else jump()}
+cv.addEventListener('click',action);
+cv.addEventListener('touchstart',e=>{e.preventDefault();action()},{passive:false});
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'){e.preventDefault();action()}
+  if(e.code==='ArrowDown')duck(true);
+});
+document.addEventListener('keyup',e=>{if(e.code==='ArrowDown')duck(false)});
+init();loop();
+</script>
+</body></html>
