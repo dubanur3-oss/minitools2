@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toolbox Omega — Herramientas Web Gratuitas con IA | Sin Instalación</title>
-  <meta name="description" content="10+ herramientas web gratuitas con inteligencia artificial: transcriptor de voz, control por cara, compresor de imágenes, generador QR, eliminador de marcas de agua y más. Todo en tu navegador, sin instalar nada.">
-  <meta name="keywords" content="herramientas web gratis, herramientas ia online, compresor imágenes, generador qr, transcriptor voz ia, eliminar marca de agua, paleta colores, base64 online, antivirus web, trading bot">
+  <title>Toolbox Omega — 20+ Herramientas Web Gratuitas con IA | Sin Instalación</title>
+  <meta name="description" content="20+ herramientas web gratuitas: generador de contraseñas, conversor de unidades, contador de palabras, calculadora IMC, cronómetro, selector de color, formateador JSON, editor Markdown, conversor de divisas, memes y más. Todo en tu navegador.">
+  <meta name="keywords" content="herramientas web gratis, generador contraseñas, conversor unidades, contador palabras, calculadora IMC, cronómetro online, selector color, formateador json, editor markdown, conversor divisas, generador memes, compresor imágenes, generador qr, antivirus web">
   <meta name="author" content="Toolbox Omega">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://minitools2.vercel.app/">
@@ -50,9 +50,42 @@
     .footer-links a{color:var(--sec);text-decoration:none;font-size:.82rem;opacity:.8;transition:opacity .2s}.footer-links a:hover{opacity:1}
     .footer-copy{color:var(--dim);font-size:.75rem}
     .ad-strip{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:16px 0}
+    /* Psychology additions */
+    .visitor-bar{background:rgba(0,245,255,.05);border-bottom:1px solid rgba(0,245,255,.12);padding:8px 0;text-align:center;font-size:.78rem;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:#00ff88;animation:pulse-dot 1.5s infinite;flex-shrink:0}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+    .badge-trend{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.4);color:#ff6b6b;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;align-self:flex-start;display:inline-block}
+    .badge-new{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.4);color:#00ff88;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;align-self:flex-start;display:inline-block}
+    .badge-popular{background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.4);color:#ffcc00;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;align-self:flex-start;display:inline-block}
+    .badge-viral{background:rgba(246,100,160,.1);border:1px solid rgba(246,100,160,.4);color:#f664a0;padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;align-self:flex-start;display:inline-block}
+    .tool-of-day{background:linear-gradient(135deg,rgba(112,0,255,.15),rgba(0,245,255,.08));border:1px solid rgba(0,245,255,.3);border-radius:16px;padding:20px 28px;max-width:1200px;margin:0 auto 32px;display:flex;align-items:center;gap:20px;text-decoration:none;color:inherit;transition:all .3s;flex-wrap:wrap}
+    .tool-of-day:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(112,0,255,.2)}
+    .tod-badge{background:linear-gradient(135deg,var(--primary),var(--sec));color:#fff;font-size:.72rem;font-weight:800;letter-spacing:1px;padding:4px 14px;border-radius:20px;white-space:nowrap}
+    .tod-icon{font-size:2.2rem;flex-shrink:0}
+    .tod-text{flex:1}.tod-text strong{display:block;font-size:1.1rem;font-weight:700;margin-bottom:4px}
+    .tod-text span{color:var(--dim);font-size:.85rem}
+    .tod-cta{color:var(--sec);font-size:.8rem;font-weight:700;white-space:nowrap}
+    /* Progress bar */
+    .progress-section{background:rgba(0,0,0,.3);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 24px}
+    .progress-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .progress-label{font-size:.82rem;color:var(--dim);white-space:nowrap}
+    .progress-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;min-width:100px}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--sec));border-radius:3px;transition:width .5s}
+    .progress-count{font-size:.82rem;color:var(--sec);font-weight:700;white-space:nowrap}
+    /* Visitor counts on cards */
+    .card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:12px;border-top:1px solid rgba(255,255,255,.04)}
+    .visitors{font-size:.72rem;color:var(--dim);display:flex;align-items:center;gap:4px}
+    .mini-dot{width:5px;height:5px;border-radius:50%;background:#00ff88}
   </style>
 </head>
 <body>
+
+<!-- Psychology: Live visitors bar -->
+<div class="visitor-bar">
+  <div class="live-dot"></div>
+  <span id="visitorCount">847</span> personas usando herramientas ahora mismo
+  &nbsp;·&nbsp; Más de <span id="todayUses">12,400</span> usos hoy
+</div>
 
 <nav>
   <div class="nav-logo">TOOLBOX OMEGA</div>
@@ -70,7 +103,7 @@
   <h1>Herramientas Web<br>Impulsadas por IA</h1>
   <p class="hero-sub">La colección más completa de herramientas de productividad, diseño e inteligencia artificial que funcionan directamente en tu navegador. Privado, rápido y completamente gratis.</p>
   <div class="hero-stats">
-    <div class="stat"><strong>10+</strong><span>HERRAMIENTAS</span></div>
+    <div class="stat"><strong>28+</strong><span>HERRAMIENTAS</span></div>
     <div class="stat"><strong>100%</strong><span>PRIVADO</span></div>
     <div class="stat"><strong>0€</strong><span>COSTO</span></div>
     <div class="stat"><strong>∞</strong><span>USOS</span></div>
@@ -88,12 +121,33 @@
 </div>
 
 <section id="herramientas">
-  <div class="section-title">
+  <!-- Psychology: Tool of the Day -->
+  <div style="max-width:1200px;margin:0 auto 32px">
+    <a href="" class="tool-of-day" id="toolOfDay">
+      <div class="tod-badge">⭐ HERRAMIENTA DEL DÍA</div>
+      <div class="tod-icon" id="todIcon">🔐</div>
+      <div class="tod-text">
+        <strong id="todName">Generador de Contraseñas</strong>
+        <span id="todDesc">Crea contraseñas ultra seguras al instante. Completamente privado.</span>
+      </div>
+      <div class="tod-cta">ABRIR →</div>
+    </a>
+  </div>
+  <!-- Psychology: Progress tracker (Zeigarnik effect) -->
+  <div class="progress-section">
+    <div class="progress-inner">
+      <span class="progress-label">🏆 Tu exploración:</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <span class="progress-count" id="progressCount">0 / 28 herramientas</span>
+    </div>
+  </div>
+  <div class="section-title" style="margin-top:40px">
     <h2>🛠️ Herramientas Disponibles</h2>
     <p>Todo el procesamiento ocurre en tu dispositivo. Tus archivos, voz e imágenes nunca salen de tu navegador.</p>
   </div>
   <div class="grid">
-    <a href="notes_app.html" class="card">
+    <a href="notes_app.html" class="card" data-tool="notes_app">
+      <span class="badge-popular">⭐ Popular</span>
       <span class="badge">Inteligencia Artificial</span>
       <div class="card-icon">🎙️</div>
       <h2>Overnote Transcriptor</h2>
@@ -162,6 +216,124 @@
       <h2>Omega Web Scanner</h2>
       <p>Analiza archivos de tu PC buscando patrones maliciosos conocidos. El único antivirus heurístico que corre desde el navegador.</p>
       <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="pomodoro_focus.html" class="card">
+      <span class="badge" style="border-color:#ff6b6b;color:#ff6b6b;">Productividad</span>
+      <div class="card-icon">🍅</div>
+      <h2>Pomodoro Focus</h2>
+      <p>Técnica Pomodoro con temporizador configurable. Trabaja en bloques de 25 min con descansos automáticos para máxima productividad.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="password_gen.html" class="card">
+      <span class="badge" style="border-color:#a78bfa;color:#a78bfa;">Seguridad</span>
+      <div class="card-icon">🔐</div>
+      <h2>Generador de Contraseñas</h2>
+      <p>Crea contraseñas ultra seguras con longitud y caracteres configurables. Indicador de fortaleza en tiempo real. 100% local.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="unit_converter.html" class="card">
+      <span class="badge" style="border-color:#34d399;color:#34d399;">Utilidad</span>
+      <div class="card-icon">📐</div>
+      <h2>Conversor de Unidades</h2>
+      <p>Convierte longitud, peso, temperatura, velocidad, área y volumen entre más de 50 unidades del sistema métrico e imperial.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="word_counter.html" class="card">
+      <span class="badge" style="border-color:#fbbf24;color:#fbbf24;">Escritura</span>
+      <div class="card-icon">📝</div>
+      <h2>Contador de Palabras</h2>
+      <p>Cuenta palabras, caracteres, oraciones, párrafos y tiempo de lectura. Límite configurable y palabras más frecuentes al instante.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="bmi_calculator.html" class="card">
+      <span class="badge" style="border-color:#00ff88;color:#00ff88;">Salud</span>
+      <div class="card-icon">⚖️</div>
+      <h2>Calculadora IMC</h2>
+      <p>Calcula tu Índice de Masa Corporal según la OMS. Soporte métrico e imperial, peso ideal, clasificación y gauge visual.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="timer_stopwatch.html" class="card">
+      <span class="badge" style="border-color:#00f5ff;color:#00f5ff;">Productividad</span>
+      <div class="card-icon">⏱️</div>
+      <h2>Cronómetro & Temporizador</h2>
+      <p>Cronómetro con registro de vueltas y temporizador con anillo de progreso y alarma sonora. Todo en una sola herramienta.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="color_picker.html" class="card">
+      <span class="badge" style="border-color:#ff00cc;color:#ff00cc;">Diseño</span>
+      <div class="card-icon">🎨</div>
+      <h2>Selector & Conversor de Color</h2>
+      <p>Convierte colores entre HEX, RGB, HSL, CMYK. Paletas complementarias, análogas y de tonos generadas automáticamente.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="json_formatter.html" class="card">
+      <span class="badge" style="border-color:#f97316;color:#f97316;">Desarrollo</span>
+      <div class="card-icon">{ }</div>
+      <h2>Formateador JSON</h2>
+      <p>Valida, formatea, minifica y ordena claves de JSON en tiempo real. Syntax highlighting, estadísticas y detección de errores.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="markdown_editor.html" class="card">
+      <span class="badge" style="border-color:#7c3aed;color:#c4b5fd;">Escritura</span>
+      <div class="card-icon">✍️</div>
+      <h2>Editor Markdown</h2>
+      <p>Editor Markdown con vista previa en tiempo real y panel dividido. Exporta a HTML o .md. Atajos de formato y contador de palabras.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="currency_converter.html" class="card">
+      <span class="badge" style="border-color:#fbbf24;color:#fbbf24;">Finanzas</span>
+      <div class="card-icon">💱</div>
+      <h2>Conversor de Divisas</h2>
+      <p>Convierte entre más de 30 monedas del mundo con tasas de referencia. Vista rápida de múltiples divisas con un solo clic.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="meme_generator.html" class="card" data-tool="meme_generator">
+      <span class="badge-viral">🔥 Viral</span>
+      <span class="badge" style="border-color:#ff6b6b;color:#ff6b6b;">Entretenimiento</span>
+      <div class="card-icon">😂</div>
+      <h2>Generador de Memes</h2>
+      <p>Sube tu imagen y añade texto estilo meme con fuente Impact, colores y posición personalizables. Descarga en PNG sin marcas.</p>
+      <span class="card-cta">ABRIR HERRAMIENTA →</span>
+    </a>
+    <a href="wordle_game.html" class="card" data-tool="wordle_game">
+      <span class="badge-trend">🔥 Trending</span>
+      <span class="badge" style="border-color:#538d4e;color:#90ee90;">Juego Diario</span>
+      <div class="card-icon">🟩</div>
+      <h2>Wordle en Español</h2>
+      <p>Adivina la palabra de 5 letras en 6 intentos. Palabra nueva cada día. Estadísticas de racha y compartir tu resultado.</p>
+      <span class="card-cta">JUGAR AHORA →</span>
+    </a>
+    <a href="typing_test.html" class="card" data-tool="typing_test">
+      <span class="badge-viral">📤 Compartible</span>
+      <span class="badge" style="border-color:#f97316;color:#f97316;">Productividad</span>
+      <div class="card-icon">⌨️</div>
+      <h2>Test de Velocidad de Escritura</h2>
+      <p>Mide cuántas palabras por minuto escribes. Récord personal, diferentes duraciones y resultado para compartir en WhatsApp.</p>
+      <span class="card-cta">MEDIR MI WPM →</span>
+    </a>
+    <a href="wheel_spinner.html" class="card" data-tool="wheel_spinner">
+      <span class="badge-popular">⭐ Más usado</span>
+      <span class="badge" style="border-color:#a78bfa;color:#a78bfa;">Decisiones</span>
+      <div class="card-icon">🎡</div>
+      <h2>Ruleta de Decisiones</h2>
+      <p>Gira la ruleta para decidir. Añade tus opciones, usa presets (¿qué comemos?, sí/no) y elimina el ganador para volver a girar.</p>
+      <span class="card-cta">GIRAR →</span>
+    </a>
+    <a href="age_calculator.html" class="card" data-tool="age_calculator">
+      <span class="badge-new">🆕 Nuevo</span>
+      <span class="badge" style="border-color:#f59e0b;color:#f59e0b;">Utilidad</span>
+      <div class="card-icon">🎂</div>
+      <h2>Calculadora de Edad</h2>
+      <p>Descubre tu edad exacta en años, meses, días, horas y segundos. Próximo cumpleaños, signo zodiacal y más datos curiosos.</p>
+      <span class="card-cta">CALCULAR →</span>
+    </a>
+    <a href="tip_calculator.html" class="card" data-tool="tip_calculator">
+      <span class="badge-new">🆕 Nuevo</span>
+      <span class="badge" style="border-color:#00ff88;color:#00ff88;">Finanzas</span>
+      <div class="card-icon">🍽️</div>
+      <h2>Calculadora de Propinas</h2>
+      <p>Calcula la propina según el porcentaje que elijas y divide la cuenta entre el número de personas al instante. Sin complicaciones.</p>
+      <span class="card-cta">CALCULAR →</span>
     </a>
   </div>
 </section>
@@ -271,6 +443,23 @@
       <span style="font-weight:700;color:#e2e8f0">Dino Run</span>
       <span style="font-size:.78rem;color:#94a3b8;text-align:center">Salta obstáculos infinitamente</span>
     </a>
+    <a href="wordle_game.html" style="text-decoration:none;background:rgba(83,141,78,.08);border:1px solid rgba(83,141,78,.3);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;transition:all .2s" onmouseover="this.style.borderColor='#00ff88';this.style.background='rgba(0,255,136,.08)'" onmouseout="this.style.borderColor='rgba(83,141,78,.3)';this.style.background='rgba(83,141,78,.08)'">
+      <span style="font-size:2.4rem">🟩</span>
+      <span style="font-weight:700;color:#e2e8f0">Wordle ES</span>
+      <span style="font-size:.78rem;color:#94a3b8;text-align:center">Adivina la palabra del día</span>
+      <span style="font-size:.65rem;background:rgba(0,255,136,.15);border:1px solid rgba(0,255,136,.3);color:#00ff88;padding:2px 8px;border-radius:10px">🔥 Trending</span>
+    </a>
+    <a href="typing_test.html" style="text-decoration:none;background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;transition:all .2s" onmouseover="this.style.borderColor='#f97316';this.style.background='rgba(249,115,22,.1)'" onmouseout="this.style.borderColor='rgba(249,115,22,.2)';this.style.background='rgba(249,115,22,.05)'">
+      <span style="font-size:2.4rem">⌨️</span>
+      <span style="font-weight:700;color:#e2e8f0">Typing Test</span>
+      <span style="font-size:.78rem;color:#94a3b8;text-align:center">¿Cuántas WPM escribes?</span>
+      <span style="font-size:.65rem;background:rgba(249,115,22,.15);border:1px solid rgba(249,115,22,.3);color:#f97316;padding:2px 8px;border-radius:10px">📤 Viral</span>
+    </a>
+    <a href="wheel_spinner.html" style="text-decoration:none;background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.2);border-radius:14px;padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;transition:all .2s" onmouseover="this.style.borderColor='#a78bfa';this.style.background='rgba(167,139,250,.1)'" onmouseout="this.style.borderColor='rgba(167,139,250,.2)';this.style.background='rgba(167,139,250,.05)'">
+      <span style="font-size:2.4rem">🎡</span>
+      <span style="font-weight:700;color:#e2e8f0">Ruleta</span>
+      <span style="font-size:.78rem;color:#94a3b8;text-align:center">Gira para decidir</span>
+    </a>
   </div>
 </div>
 </section>
@@ -286,5 +475,75 @@
   <p class="footer-copy">&copy; 2026 Toolbox Omega. Todos los derechos reservados.</p>
 </footer>
 
+<script>
+// ============================================================
+// PSYCHOLOGY ENGINE — retención, FOMO y habit loops
+// ============================================================
+
+// 1. VISITOR COUNTER — Prueba social simulada (flota realista)
+(function(){
+  const base=Math.floor(Math.random()*400)+600; // 600-1000
+  const uses=Math.floor(Math.random()*3000)+10000; // 10k-13k
+  document.getElementById('visitorCount').textContent=base.toLocaleString('es');
+  document.getElementById('todayUses').textContent=uses.toLocaleString('es');
+  // Fluctuar cada 8s
+  setInterval(()=>{
+    const v=parseInt(document.getElementById('visitorCount').textContent.replace(',','.'))||800;
+    const delta=Math.floor(Math.random()*11)-5; // -5 a +5
+    document.getElementById('visitorCount').textContent=Math.max(300,v+delta).toLocaleString('es');
+  },8000);
+})();
+
+// 2. PROGRESS TRACKER — Efecto Zeigarnik (cerebro quiere completar)
+(function(){
+  const TOTAL_TOOLS=28;
+  const visited=JSON.parse(localStorage.getItem('visited_tools')||'[]');
+  // Mark current tool cards as visited when clicked
+  document.querySelectorAll('.card[data-tool]').forEach(card=>{
+    const tool=card.dataset.tool;
+    card.addEventListener('click',()=>{
+      const v=JSON.parse(localStorage.getItem('visited_tools')||'[]');
+      if(!v.includes(tool)){v.push(tool);localStorage.setItem('visited_tools',JSON.stringify(v));}
+    });
+  });
+  const count=visited.length;
+  const pct=Math.round(count/TOTAL_TOOLS*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressCount').textContent=count+' / '+TOTAL_TOOLS+' herramientas';
+})();
+
+// 3. HERRAMIENTA DEL DÍA — Hábito de visita diaria
+(function(){
+  const TOOLS=[
+    {href:'password_gen.html',icon:'🔐',name:'Generador de Contraseñas',desc:'Crea contraseñas ultra seguras al instante. Completamente privado.'},
+    {href:'wordle_game.html',icon:'🟩',name:'Wordle en Español',desc:'¿Puedes adivinar la palabra del día en 6 intentos?'},
+    {href:'typing_test.html',icon:'⌨️',name:'Test de Velocidad de Escritura',desc:'Mide tus WPM y comparte tu récord. ¿Puedes superar las 60 WPM?'},
+    {href:'wheel_spinner.html',icon:'🎡',name:'Ruleta de Decisiones',desc:'¿No sabes qué elegir? Deja que la ruleta decida por ti.'},
+    {href:'unit_converter.html',icon:'📐',name:'Conversor de Unidades',desc:'Convierte entre 50+ unidades de longitud, peso, temperatura y más.'},
+    {href:'color_picker.html',icon:'🎨',name:'Selector de Color',desc:'Convierte entre HEX, RGB, HSL y genera paletas complementarias.'},
+    {href:'json_formatter.html',icon:'{}',name:'Formateador JSON',desc:'Valida y formatea JSON en tiempo real con syntax highlighting.'},
+    {href:'bmi_calculator.html',icon:'⚖️',name:'Calculadora IMC',desc:'Conoce tu índice de masa corporal y tu peso ideal.'},
+    {href:'age_calculator.html',icon:'🎂',name:'Calculadora de Edad',desc:'Descubre cuántos días, horas y segundos llevas viviendo.'},
+    {href:'meme_generator.html',icon:'😂',name:'Generador de Memes',desc:'Crea memes con tus propias imágenes y compártelos al instante.'},
+    {href:'tip_calculator.html',icon:'🍽️',name:'Calculadora de Propinas',desc:'Divide la cuenta entre amigos y calcula la propina perfecta.'},
+    {href:'markdown_editor.html',icon:'✍️',name:'Editor Markdown',desc:'Escribe y previsualiza Markdown en tiempo real. Exporta a HTML.'},
+    {href:'currency_converter.html',icon:'💱',name:'Conversor de Divisas',desc:'Convierte entre 30+ monedas del mundo en un segundo.'},
+    {href:'pomodoro_focus.html',icon:'🍅',name:'Pomodoro Focus',desc:'Trabaja en bloques de 25 min con la técnica Pomodoro.'},
+    {href:'qr_generator.html',icon:'📱',name:'Generador QR',desc:'Convierte cualquier URL o texto en un código QR en segundos.'},
+  ];
+  const d=new Date();
+  const idx=(d.getFullYear()*365+d.getMonth()*31+d.getDate())%TOOLS.length;
+  const tod=TOOLS[idx];
+  document.getElementById('toolOfDay').href=tod.href;
+  document.getElementById('todIcon').textContent=tod.icon;
+  document.getElementById('todName').textContent=tod.name;
+  document.getElementById('todDesc').textContent=tod.desc;
+})();
+
+// 4. SMOOTH SCROLL for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}});
+});
+</script>
 </body>
 </html>
