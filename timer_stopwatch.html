@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronómetro y Temporizador Online — Toolbox Omega</title>
+  <meta name="description" content="Cronómetro con vueltas y temporizador con alarma. Gratis, sin registro, funciona sin internet.">
+  <link rel="canonical" href="https://minitools2.vercel.app/timer_stopwatch.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:680px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px;font-size:.95rem}
+    .tabs{display:flex;gap:0;margin-bottom:28px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    .tab{flex:1;padding:12px;background:transparent;border:none;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;transition:all .2s}
+    .tab.active{background:rgba(112,0,255,.2);color:#fff}
+    .panel{display:none}.panel.active{display:block}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;backdrop-filter:blur(20px);text-align:center}
+    .display{font-size:4.5rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--sec);letter-spacing:4px;margin-bottom:32px;font-family:'Outfit',monospace}
+    .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{padding:14px 28px;border-radius:12px;border:none;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),#3d00cc);color:#fff}
+    .btn-secondary{background:rgba(0,245,255,.1);border:1px solid var(--sec);color:var(--sec)}
+    .btn-danger{background:rgba(255,68,68,.1);border:1px solid #ff4444;color:#ff4444}
+    .btn:hover{opacity:.8}
+    .laps{margin-top:24px;max-height:200px;overflow-y:auto}
+    .lap{display:flex;justify-content:space-between;padding:10px 14px;border-radius:8px;font-size:.88rem;background:rgba(0,0,0,.3);margin-bottom:6px}
+    .lap:first-child{background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.2)}
+    .lap-num{color:var(--dim)}
+    .lap-time{color:var(--sec);font-weight:700}
+    .timer-inputs{display:flex;justify-content:center;gap:8px;margin-bottom:28px;align-items:center}
+    .timer-input-wrap{text-align:center}
+    .timer-input-wrap label{display:block;font-size:.7rem;color:var(--dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+    .timer-input-wrap input{width:70px;background:#0a0c14;border:1px solid var(--border);border-radius:8px;padding:10px 8px;color:var(--sec);font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;text-align:center;outline:none}
+    .colon{font-size:2.5rem;font-weight:800;color:var(--dim);margin-top:16px}
+    .progress-ring{margin:0 auto 24px;position:relative;width:200px;height:200px}
+    .progress-ring svg{transform:rotate(-90deg)}
+    .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:10}
+    .ring-fill{fill:none;stroke:var(--sec);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .5s,stroke .3s}
+    .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.2rem;font-weight:800;color:var(--sec);font-variant-numeric:tabular-nums}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>⏱️ Cronómetro & Temporizador</h1>
+  <p class="sub">Dos herramientas en una. Mide tiempos con vueltas o configura un temporizador con alarma.</p>
+  <div class="tabs">
+    <button class="tab active" onclick="switchPanel('stopwatch',this)">⏱ Cronómetro</button>
+    <button class="tab" onclick="switchPanel('timer',this)">⏲ Temporizador</button>
+  </div>
+
+  <!-- STOPWATCH -->
+  <div class="panel active" id="panel-stopwatch">
+    <div class="card">
+      <div class="display" id="sw-display">00:00.00</div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="sw-startbtn" onclick="swToggle()">▶ Iniciar</button>
+        <button class="btn btn-secondary" onclick="swLap()" id="sw-lapbtn" disabled>⊙ Vuelta</button>
+        <button class="btn btn-danger" onclick="swReset()">↺ Reset</button>
+      </div>
+      <div class="laps" id="sw-laps"></div>
+    </div>
+  </div>
+
+  <!-- TIMER -->
+  <div class="panel" id="panel-timer">
+    <div class="card">
+      <div class="timer-inputs" id="timer-inputs">
+        <div class="timer-input-wrap"><label>Horas</label><input type="number" id="t-h" value="0" min="0" max="99"></div>
+        <span class="colon">:</span>
+        <div class="timer-input-wrap"><label>Minutos</label><input type="number" id="t-m" value="5" min="0" max="59"></div>
+        <span class="colon">:</span>
+        <div class="timer-input-wrap"><label>Segundos</label><input type="number" id="t-s" value="0" min="0" max="59"></div>
+      </div>
+      <div class="progress-ring">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="90"/>
+          <circle class="ring-fill" id="ring" cx="100" cy="100" r="90" stroke-dasharray="565.5" stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-text" id="t-display">05:00</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="t-startbtn" onclick="timerToggle()">▶ Iniciar</button>
+        <button class="btn btn-danger" onclick="timerReset()">↺ Reset</button>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  // Panel switch
+  function switchPanel(id,btn){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.getElementById('panel-'+id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // STOPWATCH
+  let swRunning=false,swStart=0,swElapsed=0,swInterval=null,swLaps=[];
+  function swToggle(){
+    swRunning=!swRunning;
+    if(swRunning){swStart=Date.now()-swElapsed;swInterval=setInterval(swTick,10);}
+    else{clearInterval(swInterval);}
+    document.getElementById('sw-startbtn').textContent=swRunning?'⏸ Pausa':'▶ Continuar';
+    document.getElementById('sw-lapbtn').disabled=!swRunning;
+  }
+  function swTick(){swElapsed=Date.now()-swStart;document.getElementById('sw-display').textContent=fmtSw(swElapsed);}
+  function swLap(){
+    swLaps.unshift(swElapsed);
+    const div=document.getElementById('sw-laps');
+    div.innerHTML=swLaps.map((t,i)=>`<div class="lap"><span class="lap-num">Vuelta ${swLaps.length-i}</span><span class="lap-time">${fmtSw(t)}</span></div>`).join('');
+  }
+  function swReset(){clearInterval(swInterval);swRunning=false;swElapsed=0;swLaps=[];document.getElementById('sw-display').textContent='00:00.00';document.getElementById('sw-startbtn').textContent='▶ Iniciar';document.getElementById('sw-lapbtn').disabled=true;document.getElementById('sw-laps').innerHTML='';}
+  function fmtSw(ms){const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000),cs=Math.floor((ms%1000)/10);return `${pad(m)}:${pad(s)}.${pad(cs)}`;}
+  function pad(n){return String(n).padStart(2,'0')}
+
+  // TIMER
+  let tRunning=false,tRemaining=0,tTotal=0,tInterval=null;
+  function timerToggle(){
+    if(!tRunning){
+      if(!tRemaining){
+        const h=parseInt(document.getElementById('t-h').value)||0;
+        const m=parseInt(document.getElementById('t-m').value)||0;
+        const s=parseInt(document.getElementById('t-s').value)||0;
+        tTotal=(h*3600+m*60+s)*1000;
+        if(!tTotal)return;
+        tRemaining=tTotal;
+      }
+      tRunning=true;
+      tInterval=setInterval(()=>{tRemaining=Math.max(0,tRemaining-100);updateTimerDisplay();if(tRemaining<=0){clearInterval(tInterval);tRunning=false;timerAlarm();document.getElementById('t-startbtn').textContent='▶ Iniciar';}},100);
+      document.getElementById('t-startbtn').textContent='⏸ Pausa';
+      document.getElementById('timer-inputs').style.opacity='.4';
+    }else{
+      clearInterval(tInterval);tRunning=false;
+      document.getElementById('t-startbtn').textContent='▶ Continuar';
+    }
+  }
+  function updateTimerDisplay(){
+    const s=Math.ceil(tRemaining/1000),m=Math.floor(s/60),rem=s%60,h=Math.floor(m/60);
+    const txt=h>0?`${pad(h)}:${pad(m%60)}:${pad(rem)}`:`${pad(m)}:${pad(rem)}`;
+    document.getElementById('t-display').textContent=txt;
+    const pct=tTotal>0?tRemaining/tTotal:0;
+    const circumference=565.5;
+    document.getElementById('ring').style.strokeDashoffset=(1-pct)*circumference;
+    document.getElementById('ring').style.stroke=pct>.3?'var(--sec)':pct>.1?'#ffcc00':'#ff4444';
+  }
+  function timerReset(){clearInterval(tInterval);tRunning=false;tRemaining=0;updateTimerDisplay();document.getElementById('t-startbtn').textContent='▶ Iniciar';document.getElementById('timer-inputs').style.opacity='1';document.getElementById('t-display').textContent=pad(parseInt(document.getElementById('t-m').value)||5)+':'+pad(parseInt(document.getElementById('t-s').value)||0);}
+  function timerAlarm(){
+    document.getElementById('t-display').textContent='¡LISTO!';
+    document.getElementById('timer-inputs').style.opacity='1';
+    try{const ac=new AudioContext();const osc=ac.createOscillator();const g=ac.createGain();osc.connect(g);g.connect(ac.destination);osc.frequency.setValueAtTime(880,ac.currentTime);g.gain.setValueAtTime(.4,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+1.5);osc.start();osc.stop(ac.currentTime+1.5);}catch(e){}
+  }
+  ['t-h','t-m','t-s'].forEach(id=>{document.getElementById(id).addEventListener('input',()=>{if(!tRunning&&!tRemaining){const h=parseInt(document.getElementById('t-h').value)||0,m=parseInt(document.getElementById('t-m').value)||0,s=parseInt(document.getElementById('t-s').value)||0;document.getElementById('t-display').textContent=h>0?`${pad(h)}:${pad(m)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;}})});
+</script>
+</body>
+</html>

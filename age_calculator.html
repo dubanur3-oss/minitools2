@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Edad Exacta — Toolbox Omega</title>
+  <meta name="description" content="Calcula tu edad exacta en años, meses, días, horas y segundos. Próximo cumpleaños y más. Gratis.">
+  <link rel="canonical" href="https://minitools2.vercel.app/age_calculator.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--primary:#7000ff;--sec:#00f5ff;--text:#e0e8ff;--dim:rgba(224,232,255,0.55);--border:rgba(112,0,255,0.3);--surface:rgba(20,25,40,0.7)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:680px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;backdrop-filter:blur(20px);margin-bottom:20px}
+    .field label{display:block;font-size:.78rem;color:var(--dim);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .date-row{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+    .date-row input[type=date]{flex:1;background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;outline:none;min-width:140px;color-scheme:dark}
+    .date-row input:focus{border-color:var(--sec)}
+    .big-age{text-align:center;padding:28px;border-radius:14px;background:#0a0c14;border:2px solid rgba(0,245,255,.2);margin-bottom:20px;display:none}
+    .age-years{font-size:5rem;font-weight:800;color:var(--sec);line-height:1}
+    .age-sub{color:var(--dim);font-size:.95rem;margin-top:8px}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:20px}
+    .stat-card{background:#0a0c14;border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+    .stat-n{font-size:1.6rem;font-weight:800;color:var(--sec)}
+    .stat-l{font-size:.72rem;color:var(--dim);margin-top:4px}
+    .birthday-box{background:rgba(255,204,0,.06);border:1px solid rgba(255,204,0,.25);border-radius:12px;padding:18px;text-align:center;display:none}
+    .bday-icon{font-size:2.5rem;margin-bottom:8px}
+    .bday-main{font-size:1.1rem;font-weight:700;color:#ffcc00}
+    .bday-sub{color:var(--dim);font-size:.85rem;margin-top:4px}
+    .btn{background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff;width:100%;padding:14px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer}
+    .zodiac-box{background:rgba(112,0,255,.06);border:1px solid rgba(112,0,255,.3);border-radius:12px;padding:16px;text-align:center;display:none}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>🎂 Calculadora de Edad</h1>
+  <p class="sub">Descubre tu edad exacta en años, meses, días y hasta segundos. Próximo cumpleaños incluido.</p>
+  <div class="card">
+    <div class="date-row">
+      <div style="flex:1">
+        <div class="field"><label>Fecha de nacimiento</label>
+        <input type="date" id="birthDate" onchange="calculate()"></div>
+      </div>
+      <div style="flex:1">
+        <div class="field"><label>Fecha actual (o cualquier fecha)</label>
+        <input type="date" id="toDate" onchange="calculate()"></div>
+      </div>
+    </div>
+    <button class="btn" onclick="calculate()">🎯 Calcular edad</button>
+    <div class="big-age" id="bigAge">
+      <div class="age-years" id="ageYears">0</div>
+      <div class="age-sub" id="ageSub">—</div>
+    </div>
+    <div class="stats-grid" id="statsGrid" style="display:none"></div>
+    <div class="birthday-box" id="bdayBox">
+      <div class="bday-icon">🎉</div>
+      <div class="bday-main" id="bdayMain">—</div>
+      <div class="bday-sub" id="bdaySub">—</div>
+    </div>
+    <div class="zodiac-box" id="zodiacBox" style="margin-top:16px">
+      <span id="zodiacEmoji" style="font-size:2rem"></span>
+      <div id="zodiacName" style="font-weight:700;margin-top:6px;color:var(--text)"></div>
+      <div id="zodiacDesc" style="color:var(--dim);font-size:.82rem;margin-top:4px"></div>
+    </div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  const ZODIAC=[
+    {name:'Capricornio',emoji:'♑',start:[12,22],end:[1,19],desc:'Ambicioso, disciplinado, práctico'},
+    {name:'Acuario',emoji:'♒',start:[1,20],end:[2,18],desc:'Innovador, humanitario, original'},
+    {name:'Piscis',emoji:'♓',start:[2,19],end:[3,20],desc:'Intuitivo, compasivo, artístico'},
+    {name:'Aries',emoji:'♈',start:[3,21],end:[4,19],desc:'Valiente, enérgico, pionero'},
+    {name:'Tauro',emoji:'♉',start:[4,20],end:[5,20],desc:'Fiel, paciente, determinado'},
+    {name:'Géminis',emoji:'♊',start:[5,21],end:[6,20],desc:'Versátil, curioso, comunicativo'},
+    {name:'Cáncer',emoji:'♋',start:[6,21],end:[7,22],desc:'Protector, intuitivo, emocional'},
+    {name:'Leo',emoji:'♌',start:[7,23],end:[8,22],desc:'Generoso, creativo, carismático'},
+    {name:'Virgo',emoji:'♍',start:[8,23],end:[9,22],desc:'Analítico, práctico, perfeccionista'},
+    {name:'Libra',emoji:'♎',start:[9,23],end:[10,22],desc:'Justo, diplomático, sociable'},
+    {name:'Escorpio',emoji:'♏',start:[10,23],end:[11,21],desc:'Apasionado, intenso, transformador'},
+    {name:'Sagitario',emoji:'♐',start:[11,22],end:[12,21],desc:'Aventurero, optimista, filosófico'}
+  ];
+
+  document.getElementById('toDate').value=new Date().toISOString().split('T')[0];
+
+  function calculate(){
+    const b=document.getElementById('birthDate').value;
+    const t=document.getElementById('toDate').value;
+    if(!b||!t)return;
+    const birth=new Date(b),to=new Date(t);
+    if(birth>to){alert('La fecha de nacimiento debe ser anterior.');return;}
+
+    let years=to.getFullYear()-birth.getFullYear();
+    let months=to.getMonth()-birth.getMonth();
+    let days=to.getDate()-birth.getDate();
+    if(days<0){months--;days+=new Date(to.getFullYear(),to.getMonth(),0).getDate();}
+    if(months<0){years--;months+=12;}
+
+    const totalDays=Math.floor((to-birth)/(1000*60*60*24));
+    const totalMonths=years*12+months;
+    const totalHours=totalDays*24;
+    const totalMins=totalHours*60;
+    const totalSecs=totalMins*60;
+    const totalWeeks=Math.floor(totalDays/7);
+
+    document.getElementById('bigAge').style.display='block';
+    document.getElementById('ageYears').textContent=years;
+    document.getElementById('ageSub').textContent=`${years} años, ${months} meses y ${days} días`;
+
+    const stats=[
+      {n:totalMonths.toLocaleString('es'),l:'Meses totales'},
+      {n:totalWeeks.toLocaleString('es'),l:'Semanas'},
+      {n:totalDays.toLocaleString('es'),l:'Días'},
+      {n:totalHours.toLocaleString('es'),l:'Horas'},
+      {n:totalMins.toLocaleString('es'),l:'Minutos'},
+      {n:totalSecs.toLocaleString('es'),l:'Segundos'},
+    ];
+    const grid=document.getElementById('statsGrid');
+    grid.style.display='grid';
+    grid.innerHTML=stats.map(s=>`<div class="stat-card"><div class="stat-n">${s.n}</div><div class="stat-l">${s.l}</div></div>`).join('');
+
+    // Next birthday
+    const bday=document.getElementById('bdayBox');
+    const bdayMain=document.getElementById('bdayMain');
+    const bdaySub=document.getElementById('bdaySub');
+    bday.style.display='block';
+    const thisYear=to.getFullYear();
+    let nextBday=new Date(thisYear,birth.getMonth(),birth.getDate());
+    if(nextBday<=to)nextBday=new Date(thisYear+1,birth.getMonth(),birth.getDate());
+    const daysLeft=Math.ceil((nextBday-to)/(1000*60*60*24));
+    if(daysLeft===0){bdayMain.textContent='🎉 ¡HOY ES TU CUMPLEAÑOS!';bdaySub.textContent='¡Feliz cumpleaños! 🎂🎊';}
+    else if(daysLeft===1){bdayMain.textContent='¡Mañana es tu cumpleaños!';bdaySub.textContent=`${nextBday.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'})}`;}
+    else{bdayMain.textContent=`Próximo cumpleaños en ${daysLeft} días`;bdaySub.textContent=`${nextBday.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}`;}
+
+    // Zodiac
+    const m=birth.getMonth()+1,d=birth.getDate();
+    const z=ZODIAC.find(sign=>{
+      if(sign.start[0]<sign.end[0])return(m===sign.start[0]&&d>=sign.start[1])||(m>sign.start[0]&&m<sign.end[0])||(m===sign.end[0]&&d<=sign.end[1]);
+      return(m===sign.start[0]&&d>=sign.start[1])||m>sign.start[0]||(m===sign.end[0]&&d<=sign.end[1]);
+    })||ZODIAC[0];
+    document.getElementById('zodiacBox').style.display='block';
+    document.getElementById('zodiacEmoji').textContent=z.emoji;
+    document.getElementById('zodiacName').textContent=z.name;
+    document.getElementById('zodiacDesc').textContent=z.desc;
+  }
+</script>
+</body>
+</html>

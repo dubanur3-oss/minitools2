@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Propinas — Dividir Cuenta | Toolbox Omega</title>
+  <meta name="description" content="Calcula la propina al instante y divide la cuenta entre amigos. Gratis, sin registro, funciona sin internet.">
+  <link rel="canonical" href="https://minitools2.vercel.app/tip_calculator.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--primary:#7000ff;--sec:#00f5ff;--text:#e0e8ff;--dim:rgba(224,232,255,0.55);--border:rgba(112,0,255,0.3);--surface:rgba(20,25,40,0.7)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:640px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;backdrop-filter:blur(20px);margin-bottom:20px}
+    .field{margin-bottom:20px}
+    .field label{display:block;font-size:.78rem;color:var(--dim);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .amount-input{display:flex;align-items:center;gap:0;background:#0a0c14;border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
+    .amount-input:focus-within{border-color:var(--sec)}
+    .currency-sym{padding:14px 16px;font-size:1.1rem;font-weight:700;color:var(--sec);background:rgba(0,245,255,.05)}
+    .amount-input input{flex:1;background:transparent;border:none;padding:14px 16px 14px 8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1.1rem;outline:none}
+    /* Tip presets */
+    .tip-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .tip-btn{flex:1;min-width:54px;padding:10px 8px;border:1px solid var(--border);border-radius:10px;background:transparent;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;transition:all .2s;text-align:center}
+    .tip-btn.active,.tip-btn:hover{background:rgba(112,0,255,.2);border-color:var(--primary);color:#fff}
+    .tip-custom{background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:12px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;outline:none;width:100%;margin-top:8px}
+    .tip-custom:focus{border-color:var(--sec)}
+    /* People stepper */
+    .stepper{display:flex;align-items:center;gap:16px;background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:8px 16px;width:fit-content}
+    .step-btn{background:rgba(112,0,255,.2);border:1px solid var(--primary);color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .step-btn:hover{background:rgba(112,0,255,.4)}
+    .step-val{font-size:1.4rem;font-weight:800;color:var(--sec);min-width:36px;text-align:center}
+    /* Results */
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .res-card{background:#0a0c14;border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center}
+    .res-card.highlight{border-color:var(--sec);background:rgba(0,245,255,.04)}
+    .res-n{font-size:2rem;font-weight:800;color:var(--sec)}
+    .res-l{color:var(--dim);font-size:.75rem;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+    /* Quality badges */
+    .quality-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+    .qual-btn{flex:1;padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.8rem;transition:all .2s;text-align:center}
+    .qual-btn:hover{border-color:var(--sec);color:var(--sec)}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>🍽️ Calculadora de Propinas</h1>
+  <p class="sub">Calcula la propina y divide la cuenta entre amigos en segundos. Sin apps, sin complicaciones.</p>
+  <div class="card">
+    <div class="field">
+      <label>Total de la cuenta</label>
+      <div class="amount-input">
+        <span class="currency-sym">$</span>
+        <input type="number" id="billAmt" value="50" min="0" step="0.01" oninput="calculate()">
+      </div>
+    </div>
+    <div class="field">
+      <label>% de propina</label>
+      <div class="tip-presets">
+        <button class="tip-btn" onclick="setTip(5,this)">5%</button>
+        <button class="tip-btn" onclick="setTip(10,this)">10%</button>
+        <button class="tip-btn active" onclick="setTip(15,this)">15%</button>
+        <button class="tip-btn" onclick="setTip(18,this)">18%</button>
+        <button class="tip-btn" onclick="setTip(20,this)">20%</button>
+        <button class="tip-btn" onclick="setTip(25,this)">25%</button>
+      </div>
+      <input type="number" class="tip-custom" id="tipPct" value="15" min="0" max="100" placeholder="Personalizado…" oninput="onCustomTip()">
+    </div>
+    <div class="field">
+      <label>¿Cuántas personas?</label>
+      <div class="stepper">
+        <button class="step-btn" onclick="changePeople(-1)">−</button>
+        <span class="step-val" id="peopleVal">2</span>
+        <button class="step-btn" onclick="changePeople(1)">+</button>
+      </div>
+    </div>
+    <div class="quality-row">
+      <button class="qual-btn" onclick="setTip(10,null)">😐 Aceptable (10%)</button>
+      <button class="qual-btn" onclick="setTip(15,null)">😊 Bueno (15%)</button>
+      <button class="qual-btn" onclick="setTip(20,null)">😄 Excelente (20%)</button>
+      <button class="qual-btn" onclick="setTip(25,null)">🤩 Increíble (25%)</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="results-grid">
+      <div class="res-card"><div class="res-n" id="resTip">$7.50</div><div class="res-l">Propina total</div></div>
+      <div class="res-card"><div class="res-n" id="resTotal">$57.50</div><div class="res-l">Total a pagar</div></div>
+      <div class="res-card highlight"><div class="res-n" id="resPerPerson">$28.75</div><div class="res-l">Por persona</div></div>
+      <div class="res-card"><div class="res-n" id="resTipPer">$3.75</div><div class="res-l">Propina por persona</div></div>
+    </div>
+    <div style="margin-top:16px;text-align:center;color:var(--dim);font-size:.85rem" id="splitMsg"></div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  let people=2,tipPct=15;
+  function fmt(n){return n.toLocaleString('es',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function calculate(){
+    const bill=parseFloat(document.getElementById('billAmt').value)||0;
+    const tip=bill*tipPct/100;
+    const total=bill+tip;
+    const perPerson=total/people;
+    const tipPer=tip/people;
+    document.getElementById('resTip').textContent='$'+fmt(tip);
+    document.getElementById('resTotal').textContent='$'+fmt(total);
+    document.getElementById('resPerPerson').textContent='$'+fmt(perPerson);
+    document.getElementById('resTipPer').textContent='$'+fmt(tipPer);
+    document.getElementById('splitMsg').textContent=people>1?`Cada uno de ${people} personas paga $${fmt(perPerson)} (incluye $${fmt(tipPer)} de propina)`:'';
+  }
+  function setTip(pct,btn){
+    tipPct=pct;
+    document.getElementById('tipPct').value=pct;
+    document.querySelectorAll('.tip-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    calculate();
+  }
+  function onCustomTip(){
+    tipPct=parseFloat(document.getElementById('tipPct').value)||0;
+    document.querySelectorAll('.tip-btn').forEach(b=>b.classList.remove('active'));
+    calculate();
+  }
+  function changePeople(d){
+    people=Math.max(1,Math.min(50,people+d));
+    document.getElementById('peopleVal').textContent=people;
+    calculate();
+  }
+  calculate();
+</script>
+</body>
+</html>

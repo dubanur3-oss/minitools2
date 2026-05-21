@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruleta de Decisiones Online — Toolbox Omega</title>
+  <meta name="description" content="Ruleta giratoria para tomar decisiones. Añade opciones y gira. Ideal para grupos, sorteos y elecciones difíciles.">
+  <link rel="canonical" href="https://minitools2.vercel.app/wheel_spinner.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--primary:#7000ff;--sec:#00f5ff;--text:#e0e8ff;--dim:rgba(224,232,255,0.55);--border:rgba(112,0,255,0.3)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:1000px;margin:0 auto;padding:40px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:28px;font-size:.95rem}
+    .layout{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start}
+    @media(max-width:700px){.layout{grid-template-columns:1fr}}
+    .wheel-wrap{display:flex;flex-direction:column;align-items:center;gap:20px}
+    .canvas-container{position:relative;display:flex;align-items:center;justify-content:center}
+    canvas{border-radius:50%;box-shadow:0 0 40px rgba(112,0,255,.35),0 0 80px rgba(0,245,255,.08)}
+    .pointer{position:absolute;right:-18px;top:50%;transform:translateY(-50%);width:0;height:0;border-top:22px solid transparent;border-bottom:22px solid transparent;border-right:40px solid var(--sec);filter:drop-shadow(0 0 6px var(--sec))}
+    .spin-btn{background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff;padding:18px 48px;border-radius:14px;font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 8px 24px rgba(112,0,255,.35)}
+    .spin-btn:hover{transform:scale(1.04);box-shadow:0 12px 32px rgba(112,0,255,.5)}
+    .spin-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .result-box{background:rgba(0,245,255,.06);border:2px solid rgba(0,245,255,.25);border-radius:14px;padding:18px;text-align:center;min-height:64px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:800;color:var(--sec);transition:all .3s}
+    /* Controls */
+    .card{background:rgba(20,25,40,.7);border:1px solid var(--border);border-radius:16px;padding:24px;backdrop-filter:blur(20px)}
+    .card h3{font-size:1rem;font-weight:700;margin-bottom:16px}
+    .input-row{display:flex;gap:8px;margin-bottom:12px}
+    .input-row input{flex:1;background:#0a0c14;border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;outline:none}
+    .input-row input:focus{border-color:var(--sec)}
+    .add-btn{background:rgba(112,0,255,.2);border:1px solid var(--primary);color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-weight:700;font-size:.85rem;white-space:nowrap}
+    .add-btn:hover{background:rgba(112,0,255,.35)}
+    .options-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;margin-bottom:16px}
+    .option-item{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border-radius:8px;padding:8px 12px}
+    .opt-color{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+    .opt-label{flex:1;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .opt-del{background:none;border:none;color:var(--dim);cursor:pointer;font-size:1rem;padding:2px 4px;transition:color .2s}
+    .opt-del:hover{color:#ff4444}
+    .presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .preset{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:.75rem;cursor:pointer;color:var(--dim);transition:all .2s}
+    .preset:hover{border-color:var(--sec);color:var(--sec)}
+    .tools-row{display:flex;gap:8px;flex-wrap:wrap}
+    .tool-btn{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:.78rem;cursor:pointer;color:var(--dim);font-family:'Outfit',sans-serif;transition:all .2s;text-align:center}
+    .tool-btn:hover{border-color:var(--sec);color:var(--sec)}
+    .history{margin-top:16px}
+    .history h4{font-size:.82rem;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+    .hist-item{font-size:.82rem;color:var(--dim);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:8px}
+    .hist-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>🎡 Ruleta de Decisiones</h1>
+  <p class="sub">Añade opciones y gira. Para grupos, sorteos, ¿qué comemos hoy? o cualquier decisión difícil.</p>
+  <div class="layout">
+    <div class="wheel-wrap">
+      <div class="canvas-container">
+        <canvas id="wheel" width="380" height="380"></canvas>
+        <div class="pointer"></div>
+      </div>
+      <div class="result-box" id="resultBox">¡Gira la ruleta!</div>
+      <button class="spin-btn" id="spinBtn" onclick="spin()">🎲 ¡GIRAR!</button>
+    </div>
+    <div>
+      <div class="card">
+        <h3>✏️ Opciones</h3>
+        <div class="input-row">
+          <input type="text" id="optInput" placeholder="Añade una opción…" onkeydown="if(event.key==='Enter')addOption()">
+          <button class="add-btn" onclick="addOption()">+ Añadir</button>
+        </div>
+        <div class="presets">
+          <div class="preset" onclick="loadPreset('yesno')">Sí / No</div>
+          <div class="preset" onclick="loadPreset('comida')">¿Qué comemos?</div>
+          <div class="preset" onclick="loadPreset('quien')">¿Quién lo hace?</div>
+          <div class="preset" onclick="loadPreset('semana')">Día de la semana</div>
+        </div>
+        <div class="options-list" id="optionsList"></div>
+        <div class="tools-row">
+          <div class="tool-btn" onclick="shuffleOptions()">🔀 Mezclar</div>
+          <div class="tool-btn" onclick="clearOptions()">🗑️ Limpiar</div>
+          <div class="tool-btn" onclick="removeWinner()">❌ Quitar ganador</div>
+        </div>
+        <div class="history" id="historyBox" style="display:none">
+          <h4>Historial</h4>
+          <div id="histList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+const COLORS=['#7000ff','#00f5ff','#ff6b6b','#f59e0b','#00ff88','#a78bfa','#f97316','#06b6d4','#ec4899','#84cc16','#ef4444','#8b5cf6','#22d3ee','#fb923c','#a3e635'];
+const PRESETS={
+  yesno:['Sí ✅','No ❌'],
+  comida:['Pizza 🍕','Tacos 🌮','Sushi 🍣','Hamburguesa 🍔','Ensalada 🥗','Pasta 🍝','Pollo 🍗','Lo que haya 😂'],
+  quien:['Yo 🙋','Tú 🙋','El primero que llegue','El último que llegó','Quien lo propuso','A medias','Nadie todavía'],
+  semana:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo']
+};
+
+let options=[],spinning=false,currentAngle=0,lastWinner=null,history=[];
+
+function init(){
+  options=['Opción 1 🎯','Opción 2 🌟','Opción 3 🔥','Opción 4 ⚡'];
+  renderAll();
+}
+
+function addOption(){
+  const inp=document.getElementById('optInput');
+  const val=inp.value.trim();
+  if(!val)return;
+  options.push(val);inp.value='';
+  renderAll();
+}
+
+function removeOption(i){options.splice(i,1);renderAll();}
+function clearOptions(){options=[];lastWinner=null;renderAll();}
+function shuffleOptions(){options.sort(()=>Math.random()-.5);renderAll();}
+function removeWinner(){if(lastWinner!==null&&options.length>1){options.splice(lastWinner,1);lastWinner=null;}renderAll();}
+
+function loadPreset(key){options=[...PRESETS[key]];renderAll();}
+
+function renderAll(){
+  renderList();drawWheel();
+}
+
+function renderList(){
+  const list=document.getElementById('optionsList');
+  list.innerHTML=options.map((o,i)=>`
+    <div class="option-item">
+      <div class="opt-color" style="background:${COLORS[i%COLORS.length]}"></div>
+      <div class="opt-label">${o}</div>
+      <button class="opt-del" onclick="removeOption(${i})">✕</button>
+    </div>`).join('');
+}
+
+function drawWheel(highlightIdx=-1){
+  if(!options.length)return;
+  const canvas=document.getElementById('wheel');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,cx=W/2,cy=H/2,r=cx-8;
+  ctx.clearRect(0,0,W,H);
+  const arc=Math.PI*2/options.length;
+  options.forEach((opt,i)=>{
+    const start=currentAngle+i*arc;
+    const end=start+arc;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,end);
+    ctx.closePath();
+    ctx.fillStyle=i===highlightIdx?'#fff':COLORS[i%COLORS.length];
+    ctx.fill();
+    ctx.strokeStyle='rgba(7,9,15,.7)';ctx.lineWidth=2;ctx.stroke();
+    // Text
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(start+arc/2);
+    ctx.textAlign='right';
+    ctx.fillStyle=i===highlightIdx?'#000':'rgba(255,255,255,.95)';
+    ctx.font=`bold ${Math.min(16,Math.max(9,220/options.length))}px Outfit,sans-serif`;
+    const label=opt.length>18?opt.slice(0,16)+'…':opt;
+    ctx.fillText(label,r-14,5);
+    ctx.restore();
+  });
+  // Center circle
+  ctx.beginPath();ctx.arc(cx,cy,22,0,Math.PI*2);
+  ctx.fillStyle='#07090f';ctx.fill();
+  ctx.strokeStyle='rgba(112,0,255,.5)';ctx.lineWidth=3;ctx.stroke();
+}
+
+function spin(){
+  if(spinning||!options.length)return;
+  spinning=true;
+  document.getElementById('spinBtn').disabled=true;
+  document.getElementById('resultBox').textContent='Girando…';
+  const totalSpins=6+Math.random()*6;
+  const targetAngle=Math.PI*2*totalSpins;
+  const duration=3000+Math.random()*1500;
+  const start=performance.now();
+  const startAngle=currentAngle;
+  function animate(now){
+    const elapsed=now-start;
+    const progress=Math.min(elapsed/duration,1);
+    // Ease out
+    const eased=1-Math.pow(1-progress,4);
+    currentAngle=startAngle+targetAngle*eased;
+    drawWheel();
+    if(progress<1){requestAnimationFrame(animate);}
+    else{
+      // Determine winner: pointer is at right side (angle 0)
+      const n=options.length;
+      const arc=Math.PI*2/n;
+      // Normalize angle so pointer (right = 0) maps correctly
+      const norm=(((-currentAngle)%(Math.PI*2))+(Math.PI*2))%(Math.PI*2);
+      const winnerIdx=Math.floor(norm/arc)%n;
+      lastWinner=winnerIdx;
+      drawWheel(winnerIdx);
+      document.getElementById('resultBox').textContent='🎉 '+options[winnerIdx];
+      spinning=false;
+      document.getElementById('spinBtn').disabled=false;
+      // History
+      history.unshift({label:options[winnerIdx],color:COLORS[winnerIdx%COLORS.length]});
+      if(history.length>8)history.pop();
+      renderHistory();
+      // Sound
+      try{const ac=new AudioContext();const o=ac.createOscillator();const g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=440;g.gain.setValueAtTime(.3,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.8);o.start();o.stop(ac.currentTime+.8);}catch(e){}
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function renderHistory(){
+  const box=document.getElementById('historyBox');
+  const list=document.getElementById('histList');
+  box.style.display='block';
+  list.innerHTML=history.map((h,i)=>`<div class="hist-item"><div class="hist-dot" style="background:${h.color}"></div>${i===0?'<strong style="color:var(--text)">':''}${h.label}${i===0?'</strong>':''}</div>`).join('');
+}
+
+init();
+document.getElementById('optInput').addEventListener('keydown',e=>{if(e.key==='Enter')addOption();});
+</script>
+</body>
+</html>

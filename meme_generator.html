@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Memes Online — Toolbox Omega</title>
+  <meta name="description" content="Crea memes con texto en imágenes propias. Sin subir nada a servidores. Descarga en PNG gratis.">
+  <link rel="canonical" href="https://minitools2.vercel.app/meme_generator.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:900px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px;font-size:.95rem}
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:24px}
+    @media(max-width:700px){.layout{grid-template-columns:1fr}}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;backdrop-filter:blur(20px)}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:.78rem;color:var(--dim);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .field input,.field select,.field textarea{width:100%;background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--sec)}
+    .field textarea{height:70px;resize:vertical}
+    .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#0a0c14;margin-bottom:18px}
+    .drop-zone:hover,.drop-zone.drag{border-color:var(--sec);background:rgba(0,245,255,.04)}
+    .drop-icon{font-size:2.5rem;margin-bottom:8px}
+    .drop-text{color:var(--dim);font-size:.85rem}
+    .color-row{display:flex;gap:12px;align-items:center}
+    .color-row input[type=color]{width:44px;height:36px;border:1px solid var(--border);border-radius:6px;cursor:pointer;padding:2px}
+    .slider-row{display:flex;align-items:center;gap:10px}
+    .slider-row input[type=range]{flex:1;accent-color:var(--primary)}
+    .slider-row span{width:36px;text-align:right;font-size:.85rem;color:var(--sec);font-weight:700}
+    .btn{width:100%;background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff;padding:14px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:8px}
+    .btn:hover{opacity:.85}.btn.sec{background:rgba(0,245,255,.1);border:1px solid var(--sec);color:var(--sec)}
+    .canvas-wrap{display:flex;flex-direction:column;align-items:center;gap:16px}
+    canvas{max-width:100%;border-radius:12px;border:1px solid var(--border);background:#111}
+    .placeholder{width:100%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.3);border:2px dashed var(--border);border-radius:12px;color:var(--dim)}
+    .placeholder .icon{font-size:3rem;margin-bottom:12px}
+    .pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:18px}
+    .pos-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:8px 4px;font-size:.7rem;color:var(--dim);cursor:pointer;text-align:center;transition:all .2s}
+    .pos-btn.active,.pos-btn:hover{border-color:var(--sec);color:var(--sec);background:rgba(0,245,255,.06)}
+    .templates{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .tpl{background:#111;border:2px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.78rem;cursor:pointer;transition:all .2s;color:var(--dim)}
+    .tpl:hover{border-color:var(--sec);color:var(--sec)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>😂 Generador de Memes</h1>
+  <p class="sub">Sube tu imagen, añade texto estilo meme y descarga en PNG. Todo en tu navegador, sin servidores.</p>
+  <div class="layout">
+    <div>
+      <div class="card">
+        <!-- Image upload -->
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('imgInput').click()">
+          <div class="drop-icon">🖼️</div>
+          <div class="drop-text">Arrastra una imagen o <strong style="color:var(--sec)">haz clic para seleccionar</strong></div>
+        </div>
+        <input type="file" id="imgInput" accept="image/*" style="display:none" onchange="loadImage(this)">
+
+        <!-- Templates -->
+        <div class="field">
+          <label>Plantillas de fondo</label>
+          <div class="templates" id="tplRow"></div>
+        </div>
+
+        <!-- Top text -->
+        <div class="field">
+          <label>Texto superior</label>
+          <textarea id="topText" oninput="drawMeme()" placeholder="CUANDO TE DAS CUENTA..."></textarea>
+        </div>
+        <!-- Bottom text -->
+        <div class="field">
+          <label>Texto inferior</label>
+          <textarea id="botText" oninput="drawMeme()" placeholder="...Y YA ES LUNES"></textarea>
+        </div>
+        <!-- Font size -->
+        <div class="field">
+          <label>Tamaño de fuente</label>
+          <div class="slider-row">
+            <input type="range" id="fontSize" min="20" max="120" value="56" oninput="document.getElementById('fsVal').textContent=this.value;drawMeme()">
+            <span id="fsVal">56</span>
+          </div>
+        </div>
+        <!-- Colors -->
+        <div class="field">
+          <label>Color texto / contorno</label>
+          <div class="color-row">
+            <input type="color" id="textColor" value="#ffffff" oninput="drawMeme()">
+            <span style="font-size:.82rem;color:var(--dim)">Texto</span>
+            <input type="color" id="strokeColor" value="#000000" oninput="drawMeme()">
+            <span style="font-size:.82rem;color:var(--dim)">Contorno</span>
+          </div>
+        </div>
+        <!-- Position for custom text -->
+        <div class="field">
+          <label>Posición texto personalizado</label>
+          <div class="pos-grid" id="posGrid"></div>
+        </div>
+        <!-- Custom center text -->
+        <div class="field">
+          <label>Texto libre (posición custom)</label>
+          <input type="text" id="centerText" oninput="drawMeme()" placeholder="Texto adicional…">
+        </div>
+        <button class="btn" onclick="downloadMeme()">⬇️ Descargar PNG</button>
+        <button class="btn sec" style="margin-top:8px" onclick="copyToClipboard()">📋 Copiar imagen</button>
+      </div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="500" height="500" style="display:none"></canvas>
+      <div class="placeholder" id="placeholder">
+        <div class="icon">😂</div>
+        <div>Sube una imagen para empezar</div>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  let img=null;
+  let customPos={x:.5,y:.5};
+
+  // Position grid
+  const positions=[
+    {label:'↖',x:.1,y:.1},{label:'↑',x:.5,y:.1},{label:'↗',x:.9,y:.1},
+    {label:'←',x:.1,y:.5},{label:'·',x:.5,y:.5},{label:'→',x:.9,y:.5},
+    {label:'↙',x:.1,y:.9},{label:'↓',x:.5,y:.9},{label:'↘',x:.9,y:.9}
+  ];
+  const posGrid=document.getElementById('posGrid');
+  positions.forEach((p,i)=>{
+    const b=document.createElement('div');b.className='pos-btn'+(i===4?' active':'');b.textContent=p.label;
+    b.onclick=()=>{customPos={x:p.x,y:p.y};document.querySelectorAll('.pos-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');drawMeme();};
+    posGrid.appendChild(b);
+  });
+
+  // Templates (colored gradients)
+  const TEMPLATES=[
+    {label:'🌅 Drama',grad:['#ff6b35','#f7931e']},
+    {label:'🌊 Azul',grad:['#0077b6','#00b4d8']},
+    {label:'🌿 Verde',grad:['#1b4332','#40916c']},
+    {label:'🌸 Rosa',grad:['#c77dff','#ff6b9d']},
+    {label:'⚫ Oscuro',grad:['#111','#222']}
+  ];
+  document.getElementById('tplRow').innerHTML=TEMPLATES.map((t,i)=>`<div class="tpl" onclick="loadTemplate(${i})">${t.label}</div>`).join('');
+  function loadTemplate(i){
+    const t=TEMPLATES[i];const c=document.getElementById('canvas');
+    c.width=500;c.height=500;
+    const ctx=c.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,500,500);
+    g.addColorStop(0,t.grad[0]);g.addColorStop(1,t.grad[1]);
+    ctx.fillStyle=g;ctx.fillRect(0,0,500,500);
+    img=new Image();img.src=c.toDataURL();
+    img.onload=()=>{document.getElementById('canvas').style.display='block';document.getElementById('placeholder').style.display='none';drawMeme();}
+  }
+
+  // Drop zone
+  const dz=document.getElementById('dropZone');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))readFile(f);});
+
+  function loadImage(inp){if(inp.files[0])readFile(inp.files[0]);}
+  function readFile(f){const r=new FileReader();r.onload=e=>{img=new Image();img.onload=()=>{document.getElementById('canvas').style.display='block';document.getElementById('placeholder').style.display='none';drawMeme();};img.src=e.target.result;};r.readAsDataURL(f);}
+
+  function drawMeme(){
+    if(!img)return;
+    const c=document.getElementById('canvas');
+    const MAX=600;
+    let w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;
+    if(w>MAX){h=Math.round(h*MAX/w);w=MAX}
+    c.width=w;c.height=h;
+    const ctx=c.getContext('2d');
+    ctx.drawImage(img,0,0,w,h);
+    const fs=parseInt(document.getElementById('fontSize').value);
+    const tc=document.getElementById('textColor').value;
+    const sc=document.getElementById('strokeColor').value;
+    ctx.font=`900 ${fs}px Impact, Arial, sans-serif`;
+    ctx.fillStyle=tc;ctx.strokeStyle=sc;ctx.lineWidth=fs*.12;
+    ctx.textAlign='center';ctx.lineJoin='round';
+    const top=document.getElementById('topText').value.trim();
+    const bot=document.getElementById('botText').value.trim();
+    const ctr=document.getElementById('centerText').value.trim();
+    if(top){drawText(ctx,top,w/2,fs*1.1,fs,w*.95);}
+    if(bot){drawText(ctx,bot,w/2,h-fs*.35,fs,w*.95);}
+    if(ctr){ctx.font=`900 ${Math.round(fs*.8)}px Impact, Arial, sans-serif`;ctx.lineWidth=fs*.1;drawText(ctx,ctr,w*customPos.x,h*customPos.y,Math.round(fs*.8),w*.95);}
+  }
+  function drawText(ctx,text,x,y,fs,maxW){
+    const lines=wrapText(ctx,text,maxW);
+    const lh=fs*1.15;
+    lines.forEach((l,i)=>{const ly=y+i*lh;ctx.strokeText(l,x,ly);ctx.fillText(l,x,ly);});
+  }
+  function wrapText(ctx,text,maxW){
+    const words=text.toUpperCase().split(' ');const lines=[];let line='';
+    words.forEach(w=>{const test=line?line+' '+w:w;if(ctx.measureText(test).width>maxW){if(line)lines.push(line);line=w;}else{line=test;}});
+    if(line)lines.push(line);return lines;
+  }
+  function downloadMeme(){if(!img)return;const a=document.createElement('a');a.href=document.getElementById('canvas').toDataURL('image/png');a.download='meme.png';a.click();}
+  function copyToClipboard(){if(!img)return;document.getElementById('canvas').toBlob(b=>navigator.clipboard.write([new ClipboardItem({'image/png':b})]));}
+</script>
+</body>
+</html>

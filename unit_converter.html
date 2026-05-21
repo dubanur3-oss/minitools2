@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Unidades — Toolbox Omega</title>
+  <meta name="description" content="Convierte longitud, peso, temperatura, área, velocidad y más. Gratis y sin registro.">
+  <link rel="canonical" href="https://minitools2.vercel.app/unit_converter.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:720px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px;font-size:.95rem}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+    .tab{padding:8px 18px;border:1px solid var(--border);border-radius:24px;background:transparent;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.83rem;font-weight:600;transition:all .2s}
+    .tab.active,.tab:hover{background:rgba(112,0,255,.2);border-color:var(--primary);color:#fff}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;backdrop-filter:blur(20px)}
+    .conv-row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:end;margin-bottom:20px}
+    .field label{display:block;font-size:.82rem;color:var(--dim);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .field input,.field select{width:100%;background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;outline:none;transition:border-color .2s}
+    .field input:focus,.field select:focus{border-color:var(--sec)}
+    .swap-btn{background:rgba(0,245,255,.08);border:1px solid var(--sec);border-radius:10px;color:var(--sec);font-size:1.4rem;cursor:pointer;padding:10px 14px;transition:all .2s;margin-bottom:2px}
+    .swap-btn:hover{background:rgba(0,245,255,.18)}
+    .result-box{background:#0a0c14;border:1px solid rgba(0,245,255,.3);border-radius:10px;padding:20px;text-align:center;margin-top:8px}
+    .result-val{font-size:2rem;font-weight:800;color:var(--sec)}
+    .result-unit{color:var(--dim);font-size:.88rem;margin-top:4px}
+    .quick-refs{margin-top:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+    .ref-item{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.8rem;color:var(--dim)}
+    .ref-item strong{color:var(--text);display:block;margin-bottom:4px}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>📐 Conversor de Unidades</h1>
+  <p class="sub">Convierte longitud, peso, temperatura, área, velocidad y volumen al instante.</p>
+  <div class="tabs" id="tabs"></div>
+  <div class="card">
+    <div class="conv-row">
+      <div class="field">
+        <label>Desde</label>
+        <input type="number" id="inputVal" value="1" oninput="convert()">
+        <select id="fromUnit" onchange="convert()" style="margin-top:10px"></select>
+      </div>
+      <button class="swap-btn" onclick="swapUnits()" title="Intercambiar">⇄</button>
+      <div class="field">
+        <label>Hacia</label>
+        <input type="number" id="outputVal" readonly style="opacity:.7">
+        <select id="toUnit" onchange="convert()" style="margin-top:10px"></select>
+      </div>
+    </div>
+    <div class="result-box">
+      <div class="result-val" id="resultBig">1</div>
+      <div class="result-unit" id="resultLabel">—</div>
+    </div>
+    <div class="quick-refs" id="quickRefs"></div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+const CATEGORIES = {
+  'Longitud': {
+    units: {m:'Metro',km:'Kilómetro',cm:'Centímetro',mm:'Milímetro',mi:'Milla',yd:'Yarda',ft:'Pie',in:'Pulgada',nm:'Milla náutica'},
+    toBase: {m:1,km:1000,cm:.01,mm:.001,mi:1609.344,yd:.9144,ft:.3048,in:.0254,nm:1852},
+    refs: ['1 m = 100 cm','1 km = 1000 m','1 milla = 1.609 km','1 pie = 30.48 cm','1 pulgada = 2.54 cm']
+  },
+  'Peso': {
+    units: {kg:'Kilogramo',g:'Gramo',lb:'Libra',oz:'Onza',t:'Tonelada',mg:'Miligramo',st:'Stone'},
+    toBase: {kg:1,g:.001,lb:.453592,oz:.0283495,t:1000,mg:0.000001,st:6.35029},
+    refs: ['1 kg = 2.205 libras','1 libra = 453.6 g','1 tonelada = 1000 kg','1 stone = 6.35 kg']
+  },
+  'Temperatura': {
+    units: {C:'Celsius',F:'Fahrenheit',K:'Kelvin'},
+    toBase: null,
+    refs: ['0°C = 32°F = 273.15 K','100°C = 212°F','-40°C = -40°F']
+  },
+  'Velocidad': {
+    units: {'m/s':'m/s','km/h':'km/h',mph:'mph',knot:'Nudo',fps:'ft/s'},
+    toBase: {'m/s':1,'km/h':1/3.6,mph:0.44704,knot:0.514444,fps:0.3048},
+    refs: ['1 km/h = 0.278 m/s','1 mph = 1.609 km/h','1 nudo = 1.852 km/h']
+  },
+  'Área': {
+    units: {'m²':'m²','km²':'km²','cm²':'cm²','ft²':'ft²','in²':'in²',ha:'Hectárea',acre:'Acre'},
+    toBase: {'m²':1,'km²':1e6,'cm²':1e-4,'ft²':0.092903,'in²':0.00064516,ha:10000,acre:4046.86},
+    refs: ['1 ha = 10000 m²','1 km² = 100 ha','1 acre = 4046.86 m²']
+  },
+  'Volumen': {
+    units: {l:'Litro',ml:'Mililitro','m³':'m³','ft³':'ft³',gal_us:'Galón US',gal_uk:'Galón UK',cup:'Taza'},
+    toBase: {l:1,ml:.001,'m³':1000,'ft³':28.3168,gal_us:3.78541,gal_uk:4.54609,cup:0.236588},
+    refs: ['1 L = 1000 mL','1 galón US = 3.785 L','1 m³ = 1000 L']
+  }
+};
+
+let currentCat = 'Longitud';
+
+function buildTabs(){
+  const tabDiv=document.getElementById('tabs');
+  tabDiv.innerHTML='';
+  Object.keys(CATEGORIES).forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='tab'+(c===currentCat?' active':'');
+    btn.textContent=c;
+    btn.onclick=()=>{currentCat=c;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');buildSelects();};
+    tabDiv.appendChild(btn);
+  });
+}
+
+function buildSelects(){
+  const cat=CATEGORIES[currentCat];
+  ['fromUnit','toUnit'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='';
+    Object.entries(cat.units).forEach(([k,v])=>{
+      const opt=document.createElement('option');
+      opt.value=k;opt.textContent=v+' ('+k+')';
+      sel.appendChild(opt);
+    });
+    if(i===1&&sel.options.length>1)sel.selectedIndex=1;
+  });
+  const refs=document.getElementById('quickRefs');
+  refs.innerHTML=cat.refs.map(r=>`<div class="ref-item"><strong>Referencia</strong>${r}</div>`).join('');
+  convert();
+}
+
+function convertTemp(val,from,to){
+  let c;
+  if(from==='C')c=val;
+  else if(from==='F')c=(val-32)*5/9;
+  else c=val-273.15;
+  if(to==='C')return c;
+  if(to==='F')return c*9/5+32;
+  return c+273.15;
+}
+
+function convert(){
+  const val=parseFloat(document.getElementById('inputVal').value)||0;
+  const from=document.getElementById('fromUnit').value;
+  const to=document.getElementById('toUnit').value;
+  const cat=CATEGORIES[currentCat];
+  let result;
+  if(currentCat==='Temperatura'){result=convertTemp(val,from,to);}
+  else{result=val*cat.toBase[from]/cat.toBase[to];}
+  const fmt=Math.abs(result)<.001||Math.abs(result)>1e9?result.toExponential(4):parseFloat(result.toPrecision(7));
+  document.getElementById('outputVal').value=fmt;
+  document.getElementById('resultBig').textContent=fmt;
+  document.getElementById('resultLabel').textContent=`${val} ${from} = ${fmt} ${to}`;
+}
+
+function swapUnits(){
+  const f=document.getElementById('fromUnit'),t=document.getElementById('toUnit');
+  const tmp=f.value;f.value=t.value;t.value=tmp;
+  convert();
+}
+
+buildTabs();buildSelects();
+</script>
+</body>
+</html>

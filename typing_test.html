@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Velocidad de Escritura — WPM Online | Toolbox Omega</title>
+  <meta name="description" content="Mide tu velocidad de escritura en palabras por minuto (WPM). ¿Puedes superar las 60 WPM? Comparte tu récord.">
+  <link rel="canonical" href="https://minitools2.vercel.app/typing_test.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--primary:#7000ff;--sec:#00f5ff;--text:#e0e8ff;--dim:rgba(224,232,255,0.55);--border:rgba(112,0,255,0.3);--green:#00ff88;--red:#ff4444;--yellow:#ffcc00}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:860px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:28px;font-size:.95rem}
+    /* Mode selector */
+    .modes{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+    .mode-btn{padding:8px 20px;border:1px solid var(--border);border-radius:24px;background:transparent;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;transition:all .2s}
+    .mode-btn.active,.mode-btn:hover{background:rgba(112,0,255,.2);border-color:var(--primary);color:#fff}
+    /* Stats bar */
+    .stats-bar{display:flex;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+    .sstat{text-align:center;flex:1;min-width:80px;background:rgba(20,25,40,.7);border:1px solid var(--border);border-radius:12px;padding:14px 8px}
+    .sstat-n{font-size:2rem;font-weight:800;color:var(--sec)}
+    .sstat-l{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+    /* Timer ring */
+    .timer-ring{position:relative;width:80px;height:80px;flex-shrink:0}
+    .timer-ring svg{transform:rotate(-90deg)}
+    .ring-bg{fill:none;stroke:rgba(255,255,255,.06);stroke-width:7}
+    .ring-fill{fill:none;stroke:var(--sec);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .1s,stroke .3s;stroke-dasharray:220}
+    .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.4rem;font-weight:800;color:var(--sec)}
+    /* Text display */
+    .text-box{background:rgba(10,12,20,.8);border:1px solid var(--border);border-radius:14px;padding:24px;font-size:1.2rem;line-height:2;margin-bottom:16px;min-height:110px;position:relative;cursor:text}
+    .word{display:inline;transition:all .15s}
+    .word.done-correct{color:rgba(255,255,255,.3)}
+    .word.done-wrong{color:#ff6666;text-decoration:line-through wavy rgba(255,100,100,.5)}
+    .word.current{background:rgba(0,245,255,.08);border-radius:3px;outline:2px solid rgba(0,245,255,.3)}
+    .word span{position:relative}
+    .word span.cursor::before{content:'';position:absolute;left:0;top:2px;bottom:2px;width:2px;background:var(--sec);animation:blink .7s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    /* Input */
+    #inputField{width:100%;background:rgba(10,12,20,.8);border:2px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1.1rem;outline:none;transition:border-color .2s}
+    #inputField:focus{border-color:var(--sec)}
+    #inputField:disabled{opacity:.4;cursor:not-allowed}
+    /* Results */
+    .results{display:none;background:rgba(20,25,40,.7);border:1px solid var(--border);border-radius:16px;padding:28px;margin-top:20px;text-align:center}
+    .result-wpm{font-size:4rem;font-weight:800;color:var(--sec)}
+    .result-badge{display:inline-block;padding:6px 18px;border-radius:24px;font-size:.9rem;font-weight:700;margin:8px 0 16px}
+    .result-sub{color:var(--dim);font-size:.88rem;margin-bottom:20px}
+    .result-grid{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+    .res-stat{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center}
+    .res-stat strong{display:block;font-size:1.4rem;font-weight:800;color:var(--text)}
+    .res-stat small{color:var(--dim);font-size:.75rem}
+    .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn{padding:12px 24px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff}
+    .btn-share{background:rgba(0,245,255,.1);border:1px solid var(--sec);color:var(--sec)}
+    .btn:hover{opacity:.8}
+    /* Record banner */
+    .record-banner{background:rgba(255,204,0,.08);border:1px solid rgba(255,204,0,.3);border-radius:8px;padding:8px 16px;font-size:.82rem;color:#ffcc00;margin-bottom:20px;display:none;text-align:center}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>⌨️ Test de Velocidad</h1>
+  <p class="sub">Mide cuántas palabras por minuto escribes. ¿Puedes superar tu récord? Comparte el resultado.</p>
+  <div class="modes" id="modes">
+    <button class="mode-btn active" data-time="30" onclick="setMode(30,this)">30 segundos</button>
+    <button class="mode-btn" data-time="60" onclick="setMode(60,this)">1 minuto</button>
+    <button class="mode-btn" data-time="120" onclick="setMode(120,this)">2 minutos</button>
+  </div>
+  <div class="stats-bar">
+    <div class="sstat"><div class="sstat-n" id="wpmLive">—</div><div class="sstat-l">WPM</div></div>
+    <div class="sstat"><div class="sstat-n" id="accLive">—</div><div class="sstat-l">Precisión</div></div>
+    <div class="sstat"><div class="sstat-n" id="wordsLive">0</div><div class="sstat-l">Palabras</div></div>
+    <div class="sstat" style="padding:8px">
+      <div class="timer-ring">
+        <svg width="80" height="80" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="35"/><circle class="ring-fill" id="timerRing" cx="40" cy="40" r="35"/></svg>
+        <div class="ring-text" id="timerTxt">—</div>
+      </div>
+    </div>
+    <div class="sstat"><div class="sstat-n" id="recordDisplay">—</div><div class="sstat-l">🏆 Récord</div></div>
+  </div>
+  <div class="record-banner" id="recordBanner">🏆 ¡Nuevo récord personal!</div>
+  <div class="text-box" id="textBox" onclick="document.getElementById('inputField').focus()"></div>
+  <input type="text" id="inputField" placeholder="Haz clic aquí y empieza a escribir..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="onInput()">
+  <div class="results" id="results">
+    <div class="result-wpm" id="resWpm">0</div>
+    <div class="result-badge" id="resBadge">—</div>
+    <div class="result-sub" id="resSub">—</div>
+    <div class="result-grid">
+      <div class="res-stat"><strong id="resWords">0</strong><small>Palabras</small></div>
+      <div class="res-stat"><strong id="resChars">0</strong><small>Caracteres</small></div>
+      <div class="res-stat"><strong id="resAcc">0%</strong><small>Precisión</small></div>
+      <div class="res-stat"><strong id="resErrors">0</strong><small>Errores</small></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="restart()">🔄 Reintentar</button>
+      <button class="btn btn-share" onclick="shareResult()">📤 Compartir</button>
+    </div>
+  </div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas gratis →</a></footer>
+<script>
+const TEXTS = {
+  es: [
+    "el sol brilla sobre el mar azul y las olas rompen suavemente en la orilla donde los niños juegan con la arena mientras las gaviotas vuelan en lo alto del cielo despejado",
+    "la tecnología avanza a un ritmo vertiginoso transformando nuestra forma de trabajar aprender y comunicarnos cada día surgen nuevas herramientas que cambian el mundo para siempre",
+    "cocinar es un arte que requiere paciencia y creatividad los mejores platos nacen de ingredientes frescos y de mucho amor por la gastronomía y el placer de compartir la mesa",
+    "en el silencio de la biblioteca los estudiantes concentrados buscan respuestas entre páginas llenas de conocimiento acumulado a lo largo de siglos de historia y ciencia humana",
+    "el deporte es fundamental para mantener una vida sana y equilibrada correr nadar y caminar son actividades que fortalecen el cuerpo y mejoran el estado de ánimo de las personas",
+    "la música tiene el poder de transportarnos a otros tiempos y lugares una melodía puede evocar recuerdos olvidados y hacernos sentir emociones que creíamos perdidas para siempre",
+    "viajar nos abre la mente y nos permite conocer culturas diferentes descubrir paisajes nuevos y hacer amigos de todo el mundo es una de las experiencias más enriquecedoras de la vida",
+    "el trabajo en equipo es clave para alcanzar grandes metas cuando las personas colaboran con respeto y compromiso los resultados superan siempre lo que cada individuo puede lograr solo"
+  ]
+};
+
+let words=[], currentWordIdx=0, inputHistory=[], startTime=null, timerInterval=null, totalTime=30, timeLeft=30, wrongWords=0, started=false;
+
+function setMode(t, btn){
+  totalTime=t; timeLeft=t;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  restart();
+}
+
+function loadText(){
+  const pool=TEXTS.es;
+  const txt=pool[Math.floor(Math.random()*pool.length)];
+  words=txt.split(' ');
+}
+
+function renderText(currentInput=''){
+  const box=document.getElementById('textBox');
+  box.innerHTML=words.map((w,i)=>{
+    let cls='word';
+    if(i<currentWordIdx)cls+=' done-correct';
+    if(i===currentWordIdx){
+      cls+=' current';
+      const chars=w.split('').map((c,ci)=>{
+        let sc='';
+        if(ci<currentInput.length){sc=currentInput[ci]===c?'correct':'wrong';}
+        if(ci===currentInput.length)sc+=' cursor';
+        return`<span class="${sc}">${c}</span>`;
+      }).join('');
+      return`<span class="${cls}">${chars}</span> `;
+    }
+    return`<span class="${cls}">${w}</span> `;
+  }).join('');
+}
+
+function onInput(){
+  const inp=document.getElementById('inputField');
+  const val=inp.value;
+  if(!started&&val.length>0){startTyping();}
+  if(!started)return;
+  if(val.endsWith(' ')){
+    const typed=val.trim();
+    const correct=words[currentWordIdx];
+    if(typed!==correct)wrongWords++;
+    inputHistory.push({typed,correct});
+    currentWordIdx++;
+    inp.value='';
+    if(currentWordIdx>=words.length)loadMoreWords();
+    renderText('');
+  }else{
+    renderText(val);
+  }
+  // Live stats
+  if(startTime){
+    const elapsed=(Date.now()-startTime)/1000/60;
+    const wpm=elapsed>0?Math.round(currentWordIdx/elapsed):0;
+    const acc=inputHistory.length>0?Math.round((inputHistory.filter(h=>h.typed===h.correct).length/inputHistory.length)*100):100;
+    document.getElementById('wpmLive').textContent=wpm;
+    document.getElementById('accLive').textContent=acc+'%';
+    document.getElementById('wordsLive').textContent=currentWordIdx;
+  }
+}
+
+function loadMoreWords(){
+  const pool=TEXTS.es;
+  const txt=pool[Math.floor(Math.random()*pool.length)];
+  words=[...words,...txt.split(' ')];
+}
+
+function startTyping(){
+  started=true;
+  startTime=Date.now();
+  timerInterval=setInterval(tick,100);
+}
+
+function tick(){
+  const elapsed=(Date.now()-startTime)/1000;
+  timeLeft=Math.max(0,totalTime-elapsed);
+  const pct=timeLeft/totalTime;
+  const circumference=220;
+  document.getElementById('timerRing').style.strokeDashoffset=(1-pct)*circumference;
+  document.getElementById('timerRing').style.stroke=pct>.4?'var(--sec)':pct>.2?'var(--yellow)':'var(--red)';
+  document.getElementById('timerTxt').textContent=Math.ceil(timeLeft);
+  if(timeLeft<=0){clearInterval(timerInterval);endTest();}
+}
+
+function endTest(){
+  const elapsed=totalTime/60;
+  const wpm=Math.round(currentWordIdx/elapsed);
+  const acc=inputHistory.length>0?Math.round((inputHistory.filter(h=>h.typed===h.correct).length/inputHistory.length)*100):100;
+  const totalChars=inputHistory.filter(h=>h.typed===h.correct).reduce((s,h)=>s+h.correct.length,0);
+  document.getElementById('inputField').disabled=true;
+  document.getElementById('results').style.display='block';
+  document.getElementById('resWpm').textContent=wpm;
+  document.getElementById('resWords').textContent=currentWordIdx;
+  document.getElementById('resChars').textContent=totalChars;
+  document.getElementById('resAcc').textContent=acc+'%';
+  document.getElementById('resErrors').textContent=wrongWords;
+  // Badge
+  let badge,color;
+  if(wpm>=100){badge='🚀 Velocista Pro';color='#00ff88'}
+  else if(wpm>=80){badge='⚡ Experto';color='#00f5ff'}
+  else if(wpm>=60){badge='✅ Avanzado';color='#7000ff'}
+  else if(wpm>=40){badge='📈 Intermedio';color='#ffaa00'}
+  else{badge='🌱 Principiante';color='#ff8888'}
+  const badgeEl=document.getElementById('resBadge');
+  badgeEl.textContent=badge;badgeEl.style.background=color+'22';badgeEl.style.border=`1px solid ${color}`;badgeEl.style.color=color;
+  document.getElementById('resSub').textContent=`Escribiste ${currentWordIdx} palabras correctas en ${totalTime} segundos con ${acc}% de precisión.`;
+  // Record
+  const key=`typing_record_${totalTime}`;
+  const prev=parseInt(localStorage.getItem(key)||'0');
+  if(wpm>prev){
+    localStorage.setItem(key,wpm);
+    document.getElementById('recordBanner').style.display='block';
+    document.getElementById('recordBanner').textContent=`🏆 ¡Nuevo récord personal! ${wpm} WPM`;
+  }
+  document.getElementById('recordDisplay').textContent=(Math.max(wpm,prev))+'';
+}
+
+function restart(){
+  clearInterval(timerInterval);
+  started=false;startTime=null;currentWordIdx=0;inputHistory=[];wrongWords=0;
+  timeLeft=totalTime;
+  document.getElementById('inputField').disabled=false;
+  document.getElementById('inputField').value='';
+  document.getElementById('results').style.display='none';
+  document.getElementById('recordBanner').style.display='none';
+  document.getElementById('wpmLive').textContent='—';
+  document.getElementById('accLive').textContent='—';
+  document.getElementById('wordsLive').textContent='0';
+  document.getElementById('timerTxt').textContent='—';
+  document.getElementById('timerRing').style.strokeDashoffset='0';
+  document.getElementById('timerRing').style.stroke='var(--sec)';
+  const key=`typing_record_${totalTime}`;
+  const rec=localStorage.getItem(key)||'—';
+  document.getElementById('recordDisplay').textContent=rec;
+  loadText();renderText();
+  document.getElementById('inputField').focus();
+}
+
+function shareResult(){
+  const wpm=document.getElementById('resWpm').textContent;
+  const acc=document.getElementById('resAcc').textContent;
+  const badge=document.getElementById('resBadge').textContent;
+  const txt=`⌨️ Test de Velocidad de Escritura\n${badge}\n${wpm} WPM · ${acc} precisión · ${totalTime}s\n\n¿Puedes superarme? 👉 minitools2.vercel.app/typing_test.html`;
+  navigator.clipboard.writeText(txt).then(()=>alert('¡Resultado copiado! Pégalo donde quieras 📲'));
+}
+
+restart();
+</script>
+</body>
+</html>

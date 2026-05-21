@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formateador y Validador JSON — Toolbox Omega</title>
+  <meta name="description" content="Formatea, valida, minifica y convierte JSON online. Gratis y privado, sin subir datos a ningún servidor.">
+  <link rel="canonical" href="https://minitools2.vercel.app/json_formatter.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:1100px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:28px;font-size:.95rem}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+    .btn{padding:10px 20px;border-radius:8px;border:none;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--primary),#3d00cc);color:#fff}
+    .btn-sec{background:rgba(0,245,255,.1);border:1px solid var(--sec);color:var(--sec)}
+    .btn-ghost{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--dim)}
+    .btn:hover{opacity:.8}
+    .status{padding:8px 16px;border-radius:8px;font-size:.82rem;font-weight:700;margin-left:auto}
+    .status.ok{background:rgba(0,255,136,.1);border:1px solid #00ff88;color:#00ff88}
+    .status.err{background:rgba(255,68,68,.1);border:1px solid #ff4444;color:#ff4444}
+    .status.idle{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--dim)}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:700px){.split{grid-template-columns:1fr}}
+    .pane{display:flex;flex-direction:column}
+    .pane-label{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin-bottom:8px;font-weight:600}
+    textarea,.output{background:#0a0c14;border:1px solid var(--border);border-radius:12px;padding:16px;font-family:'Courier New',monospace;font-size:.85rem;line-height:1.6;min-height:400px;resize:vertical;outline:none;color:var(--text);transition:border-color .2s;white-space:pre;overflow:auto}
+    textarea:focus{border-color:var(--sec)}
+    .output{color:#a8d8ea;overflow-y:auto;position:relative}
+    .output .k{color:#c792ea}.output .s{color:#a8e6cf}.output .n{color:#f9c74f}.output .b{color:#90e0ef}
+    .error-msg{background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.3);border-radius:8px;padding:12px 16px;font-size:.85rem;color:#ff8888;margin-top:12px;font-family:monospace}
+    .stats-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+    .stat-pill{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.78rem;color:var(--dim)}
+    .stat-pill strong{color:var(--sec)}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>{ } Formateador JSON</h1>
+  <p class="sub">Valida, formatea, minifica y analiza JSON en tiempo real. Todo ocurre en tu navegador.</p>
+  <div class="toolbar">
+    <button class="btn btn-primary" onclick="format()">⚡ Formatear</button>
+    <button class="btn btn-sec" onclick="minify()">📦 Minificar</button>
+    <button class="btn btn-ghost" onclick="sortKeys()">🔤 Ordenar claves</button>
+    <button class="btn btn-ghost" onclick="copyOutput()">📋 Copiar resultado</button>
+    <button class="btn btn-ghost" onclick="clearAll()">🗑️ Limpiar</button>
+    <div class="status idle" id="status">Listo</div>
+  </div>
+  <div class="stats-row" id="statsRow" style="display:none">
+    <div class="stat-pill">Tamaño: <strong id="stSize">—</strong></div>
+    <div class="stat-pill">Claves: <strong id="stKeys">—</strong></div>
+    <div class="stat-pill">Profundidad: <strong id="stDepth">—</strong></div>
+    <div class="stat-pill">Arrays: <strong id="stArrays">—</strong></div>
+    <div class="stat-pill">Objetos: <strong id="stObjs">—</strong></div>
+  </div>
+  <div class="split">
+    <div class="pane">
+      <div class="pane-label">Entrada (pega tu JSON aquí)</div>
+      <textarea id="input" placeholder='{"ejemplo": "pega tu JSON aquí", "valido": true}' oninput="liveValidate()"></textarea>
+    </div>
+    <div class="pane">
+      <div class="pane-label">Salida formateada</div>
+      <div class="output" id="output">El resultado aparecerá aquí…</div>
+    </div>
+  </div>
+  <div id="errorMsg" class="error-msg" style="display:none"></div>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  let lastParsed=null;
+  function liveValidate(){
+    const raw=document.getElementById('input').value.trim();
+    if(!raw){setStatus('idle','Listo');document.getElementById('errorMsg').style.display='none';return}
+    try{lastParsed=JSON.parse(raw);setStatus('ok','✓ JSON válido');document.getElementById('errorMsg').style.display='none';}
+    catch(e){lastParsed=null;setStatus('err','✗ Error');showError(e.message);}
+  }
+  function format(){
+    const raw=document.getElementById('input').value.trim();
+    if(!raw)return;
+    try{const parsed=JSON.parse(raw);lastParsed=parsed;const fmt=JSON.stringify(parsed,null,2);renderOutput(fmt);setStatus('ok','✓ Formateado');document.getElementById('errorMsg').style.display='none';updateStats(parsed,fmt);}
+    catch(e){setStatus('err','✗ Error');showError(e.message);}
+  }
+  function minify(){
+    const raw=document.getElementById('input').value.trim();
+    if(!raw)return;
+    try{const parsed=JSON.parse(raw);const min=JSON.stringify(parsed);renderOutput(min);setStatus('ok','✓ Minificado ('+min.length+' chars)');document.getElementById('errorMsg').style.display='none';}
+    catch(e){setStatus('err','✗ Error');showError(e.message);}
+  }
+  function sortKeys(){
+    const raw=document.getElementById('input').value.trim();
+    if(!raw)return;
+    try{const parsed=JSON.parse(raw);const sorted=sortObj(parsed);const fmt=JSON.stringify(sorted,null,2);document.getElementById('input').value=fmt;renderOutput(fmt);setStatus('ok','✓ Claves ordenadas');}
+    catch(e){setStatus('err','✗ Error');showError(e.message);}
+  }
+  function sortObj(o){if(Array.isArray(o))return o.map(sortObj);if(o&&typeof o==='object'){const r={};Object.keys(o).sort().forEach(k=>r[k]=sortObj(o[k]));return r}return o}
+  function renderOutput(str){
+    const escaped=str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const hl=escaped.replace(/"(\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,m=>{
+      let cls='n';
+      if(/^"/.test(m)){cls=/:$/.test(m)?'k':'s'}
+      else if(/true|false/.test(m))cls='b';
+      else if(/null/.test(m))cls='n';
+      return`<span class="${cls}">${m}</span>`;
+    });
+    document.getElementById('output').innerHTML=hl;
+  }
+  function updateStats(parsed,fmt){
+    let keys=0,arrays=0,objs=0,depth=0;
+    function walk(o,d){depth=Math.max(depth,d);if(Array.isArray(o)){arrays++;o.forEach(v=>walk(v,d+1));}else if(o&&typeof o==='object'){objs++;Object.entries(o).forEach(([k,v])=>{keys++;walk(v,d+1);});}}
+    walk(parsed,0);
+    document.getElementById('statsRow').style.display='flex';
+    document.getElementById('stSize').textContent=fmt.length>1024?(fmt.length/1024).toFixed(1)+'KB':fmt.length+'B';
+    document.getElementById('stKeys').textContent=keys;
+    document.getElementById('stDepth').textContent=depth;
+    document.getElementById('stArrays').textContent=arrays;
+    document.getElementById('stObjs').textContent=objs;
+  }
+  function setStatus(type,msg){const el=document.getElementById('status');el.className='status '+type;el.textContent=msg}
+  function showError(msg){const e=document.getElementById('errorMsg');e.textContent='⚠️ '+msg;e.style.display='block'}
+  function copyOutput(){const txt=document.getElementById('output').innerText;navigator.clipboard.writeText(txt);}
+  function clearAll(){document.getElementById('input').value='';document.getElementById('output').innerHTML='El resultado aparecerá aquí…';document.getElementById('errorMsg').style.display='none';document.getElementById('statsRow').style.display='none';setStatus('idle','Listo');}
+</script>
+</body>
+</html>

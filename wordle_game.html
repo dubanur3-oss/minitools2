@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle en Español — Adivina la Palabra | Toolbox Omega</title>
+  <meta name="description" content="Juega Wordle en español gratis. Adivina la palabra de 5 letras en 6 intentos. Nueva palabra cada día.">
+  <link rel="canonical" href="https://minitools2.vercel.app/wordle_game.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--primary:#7000ff;--sec:#00f5ff;--text:#e0e8ff;--dim:rgba(224,232,255,0.55);--border:rgba(112,0,255,0.3)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+    nav{width:100%;background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem}.back:hover{color:var(--sec)}
+    main{width:100%;max-width:500px;padding:32px 16px;display:flex;flex-direction:column;align-items:center;gap:20px}
+    h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
+    .subtitle{color:var(--dim);font-size:.85rem;text-align:center}
+    .stats-row{display:flex;gap:20px}
+    .stat{text-align:center;background:rgba(20,25,40,.7);border:1px solid var(--border);border-radius:10px;padding:10px 18px}
+    .stat-n{font-size:1.5rem;font-weight:800;color:var(--sec)}
+    .stat-l{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+    /* Grid */
+    .board{display:flex;flex-direction:column;gap:6px}
+    .row{display:flex;gap:6px}
+    .cell{width:58px;height:58px;border:2px solid rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800;text-transform:uppercase;transition:all .15s;user-select:none}
+    .cell.filled{border-color:rgba(255,255,255,.5);animation:pop .1s ease}
+    @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+    .cell.correct{background:#538d4e;border-color:#538d4e;animation:flip .5s ease}
+    .cell.present{background:#b59f3b;border-color:#b59f3b;animation:flip .5s ease}
+    .cell.absent{background:#3a3a3c;border-color:#3a3a3c;animation:flip .5s ease}
+    @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+    .cell.shake{animation:shake .4s ease}
+    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+    /* Keyboard */
+    .keyboard{display:flex;flex-direction:column;gap:8px;width:100%}
+    .kb-row{display:flex;gap:6px;justify-content:center}
+    .key{height:56px;min-width:36px;flex:1;max-width:42px;background:rgba(255,255,255,.12);border:none;border-radius:6px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .15s;text-transform:uppercase}
+    .key.wide{max-width:68px;font-size:.72rem}
+    .key:hover{background:rgba(255,255,255,.22)}
+    .key.correct{background:#538d4e}.key.present{background:#b59f3b}.key.absent{background:#3a3a3c}
+    /* Message */
+    .msg{background:rgba(255,255,255,.92);color:#111;font-weight:800;padding:10px 24px;border-radius:8px;font-size:.95rem;min-height:40px;display:flex;align-items:center;justify-content:center;text-align:center;width:100%}
+    .btn-new{background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff;padding:12px 28px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:none}
+    .share-btn{background:rgba(0,245,255,.12);border:1px solid var(--sec);color:var(--sec);padding:10px 20px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;display:none}
+    footer{padding:24px;color:var(--dim);font-size:.75rem;text-align:center}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>🟩 Wordle<br><span style="font-size:1.1rem;background:none;-webkit-text-fill-color:var(--dim)">en Español</span></h1>
+  <p class="subtitle">Adivina la palabra de 5 letras en 6 intentos.<br>Verde = correcta · Amarillo = en otra posición · Gris = no está</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n" id="stJugados">0</div><div class="stat-l">Jugados</div></div>
+    <div class="stat"><div class="stat-n" id="stGanados">0</div><div class="stat-l">Ganados</div></div>
+    <div class="stat"><div class="stat-n" id="stRacha">0</div><div class="stat-l">Racha</div></div>
+  </div>
+  <div class="msg" id="msg">¡Escribe tu primera palabra!</div>
+  <div class="board" id="board"></div>
+  <div class="keyboard" id="keyboard"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+    <button class="btn-new" id="btnNew" onclick="newGame()">🔄 Nueva partida</button>
+    <button class="share-btn" id="btnShare" onclick="shareResult()">📤 Compartir resultado</button>
+  </div>
+  <div style="color:var(--dim);font-size:.75rem;text-align:center">Visita <a href="index.html" style="color:var(--sec)">Toolbox Omega</a> para más herramientas y juegos gratis</div>
+</main>
+<footer>Toolbox Omega · Wordle en Español</footer>
+<script>
+const PALABRAS = [
+  'GATOS','PERRO','LUCES','MUNDO','PLAYA','CIELO','NOCHE','PLATA','BARCO','FRESA',
+  'VERDE','NEGRO','BLANCO','ROJO','AZUL','CARTA','LIBRO','JUEGO','FUEGO','AGUA',
+  'TIERRA','VIENTO','CALOR','FURIA','SUELO','LARGO','CORTO','NUEVO','VIEJO','DULCE',
+  'AMARO','SALSA','SILLA','PUERTA','BOLSA','CAMPO','MONTE','VALLE','CALLE','PLAZA',
+  'FIESTA','PLUMA','FLOR','BESO','AMOR','VIDA','HORA','NUBE','LUNA','RIOJA',
+  'FINCA','METAL','PAPEL','TINTA','BRAZO','MANOS','PECHO','BOCA','NARIZ','OJOS',
+  'MEDIA','RELOJ','BOLSO','SUELA','ARBOL','PARED','TECHO','SUELO','PUENTE','CASCO',
+  'TIGRE','LEONA','AGUILA','JABALI','LOBO','ZORRO','AVESTRUZ','COBRA','MULA','POTRO',
+  'PECES','ATUN','SALMON','TRUCHA','LANGOSTA','GAMBA','PULPO','MEJILLON','ALMEJA','OSTRA',
+  'MANGO','MELON','SANDIA','FRESA','PERA','UVAS','LIMA','DURAZNO','HIGO','DATIL',
+  'AVENA','TRIGO','MAIZ','ARROZ','PASTA','PIZZA','SOPA','QUESO','JAMON','BACON',
+  'HOTEL','TREN','AVION','BARCO','METRO','COCHE','MOTO','BICI','TAXI','VUELO',
+  'CARTA','EMAIL','TEXTO','AUDIO','VIDEO','FOTO','IMAGEN','DIBUJO','COLOR','FORMA',
+  'PERLA','RUBIO','CORAL','COBRE','BRONCE','DORADO','PLATA','ESMERALDA','ZAFIRO','RUBI',
+  'CINCO','SIETE','OCHO','NUEVE','CERO','DIEZ','CIEN','MIL','MILLON','LARGO',
+  'LLANO','LIMBO','GLOBO','GRAPA','CLAVO','TUBO','HILO','CINTA','BANDA','GOMA',
+  'MONJA','MONJE','CURA','PAPA','OBISPO','REINA','DUQUE','CONDE','BARON','SENOR'
+].map(w=>w.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase()).filter(w=>w.length===5);
+
+// Dedup
+const WORD_SET=new Set(PALABRAS);
+
+const ROWS=6,COLS=5;
+let secret='',grid=[],currentRow=0,currentCol=0,gameOver=false;
+let letterStates={};
+let stats=JSON.parse(localStorage.getItem('wordle_stats')||'{"jugados":0,"ganados":0,"racha":0}');
+let shareEmojis=[];
+
+function pickWord(){
+  // Daily word based on date
+  const d=new Date();
+  const idx=(d.getFullYear()*366+d.getMonth()*31+d.getDate())%PALABRAS.length;
+  return PALABRAS[idx];
+}
+
+function newGame(){
+  secret=pickWord();
+  grid=Array.from({length:ROWS},()=>Array(COLS).fill(''));
+  currentRow=0;currentCol=0;gameOver=false;letterStates={};shareEmojis=[];
+  buildBoard();buildKeyboard();
+  setMsg('¡Adivina la palabra de 5 letras!');
+  document.getElementById('btnNew').style.display='none';
+  document.getElementById('btnShare').style.display='none';
+  updateStats();
+}
+
+function buildBoard(){
+  const board=document.getElementById('board');
+  board.innerHTML='';
+  for(let r=0;r<ROWS;r++){
+    const row=document.createElement('div');row.className='row';row.id='row-'+r;
+    for(let c=0;c<COLS;c++){
+      const cell=document.createElement('div');cell.className='cell';cell.id=`c-${r}-${c}`;
+      row.appendChild(cell);
+    }
+    board.appendChild(row);
+  }
+}
+
+function buildKeyboard(){
+  const kb=document.getElementById('keyboard');
+  kb.innerHTML='';
+  [['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L','Ñ'],['ENTER','Z','X','C','V','B','N','M','⌫']].forEach(row=>{
+    const div=document.createElement('div');div.className='kb-row';
+    row.forEach(k=>{
+      const btn=document.createElement('button');
+      btn.className='key'+(k.length>1?' wide':'');
+      btn.textContent=k;btn.dataset.key=k;
+      btn.onclick=()=>handleKey(k);
+      div.appendChild(btn);
+    });
+    kb.appendChild(div);
+  });
+}
+
+function handleKey(k){
+  if(gameOver)return;
+  if(k==='⌫'||k==='BACKSPACE'){deleteLetter();}
+  else if(k==='ENTER'){submitGuess();}
+  else if(/^[A-ZÑ]$/.test(k)&&currentCol<COLS){addLetter(k);}
+}
+
+document.addEventListener('keydown',e=>{
+  const k=e.key.toUpperCase();
+  if(k==='BACKSPACE')handleKey('⌫');
+  else if(k==='ENTER')handleKey('ENTER');
+  else if(/^[A-ZÁÉÍÓÚÜÑ]$/.test(k)){
+    const norm=k.normalize('NFD').replace(/[̀-ͯ]/g,'');
+    handleKey(norm==='Ñ'?'Ñ':norm);
+  }
+});
+
+function addLetter(k){
+  grid[currentRow][currentCol]=k;
+  const cell=document.getElementById(`c-${currentRow}-${currentCol}`);
+  cell.textContent=k;cell.classList.add('filled');
+  currentCol++;
+}
+function deleteLetter(){
+  if(currentCol===0)return;
+  currentCol--;
+  grid[currentRow][currentCol]='';
+  document.getElementById(`c-${currentRow}-${currentCol}`).textContent='';
+  document.getElementById(`c-${currentRow}-${currentCol}`).classList.remove('filled');
+}
+
+function submitGuess(){
+  if(currentCol<COLS){shakeRow();setMsg('Escribe 5 letras primero');return;}
+  const guess=grid[currentRow].join('');
+  const result=evaluate(guess,secret);
+  const emojis=result.map(r=>r==='correct'?'🟩':r==='present'?'🟨':'⬛').join('');
+  shareEmojis.push(emojis);
+  revealRow(currentRow,result,guess,()=>{
+    if(result.every(r=>r==='correct')){
+      gameOver=true;
+      const tries=currentRow+1;
+      setMsg(`🎉 ¡Correcto en ${tries} ${tries===1?'intento':'intentos'}!`);
+      stats.jugados++;stats.ganados++;stats.racha++;
+      localStorage.setItem('wordle_stats',JSON.stringify(stats));
+      updateStats();
+      document.getElementById('btnNew').style.display='inline-block';
+      document.getElementById('btnShare').style.display='inline-block';
+    } else if(currentRow===ROWS-1){
+      gameOver=true;
+      setMsg(`La palabra era: ${secret}`);
+      stats.jugados++;stats.racha=0;
+      localStorage.setItem('wordle_stats',JSON.stringify(stats));
+      updateStats();
+      document.getElementById('btnNew').style.display='inline-block';
+      document.getElementById('btnShare').style.display='inline-block';
+    }
+    currentRow++;currentCol=0;
+  });
+}
+
+function evaluate(guess,secret){
+  const result=Array(COLS).fill('absent');
+  const sArr=[...secret],gArr=[...guess];
+  const sUsed=Array(COLS).fill(false);
+  // Correct pass
+  gArr.forEach((l,i)=>{if(l===sArr[i]){result[i]='correct';sUsed[i]=true;}});
+  // Present pass
+  gArr.forEach((l,i)=>{
+    if(result[i]==='correct')return;
+    const si=sArr.findIndex((s,j)=>!sUsed[j]&&s===l);
+    if(si!==-1){result[i]='present';sUsed[si]=true;}
+  });
+  return result;
+}
+
+function revealRow(row,result,guess,cb){
+  const delay=300;
+  result.forEach((r,i)=>{
+    setTimeout(()=>{
+      const cell=document.getElementById(`c-${row}-${i}`);
+      cell.classList.add(r);
+      // Update keyboard
+      const l=guess[i];
+      const cur=letterStates[l];
+      const priority={correct:3,present:2,absent:1};
+      if(!cur||priority[r]>priority[cur]){
+        letterStates[l]=r;
+        document.querySelectorAll(`.key[data-key="${l}"]`).forEach(k=>{k.className='key'+(k.classList.contains('wide')?' wide':'');k.classList.add(r);});
+      }
+      if(i===COLS-1)setTimeout(cb,delay);
+    },i*delay);
+  });
+}
+
+function shakeRow(){
+  document.getElementById('row-'+currentRow).querySelectorAll('.cell').forEach(c=>{c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');});}
+function setMsg(m){document.getElementById('msg').textContent=m;}
+function updateStats(){document.getElementById('stJugados').textContent=stats.jugados;document.getElementById('stGanados').textContent=stats.ganados;document.getElementById('stRacha').textContent=stats.racha;}
+function shareResult(){
+  const tries=shareEmojis.length;
+  const won=shareEmojis[tries-1]==='🟩🟩🟩🟩🟩';
+  const txt=`Wordle ES ${new Date().toLocaleDateString('es')}\n${won?tries+'/6':'X/6'}\n\n${shareEmojis.join('\n')}\n\nminitools2.vercel.app`;
+  navigator.clipboard.writeText(txt).then(()=>setMsg('¡Resultado copiado! Pégalo en WhatsApp 📲'));
+}
+
+newGame();
+</script>
+</body>
+</html>

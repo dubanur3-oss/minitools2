@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora IMC / BMI — Toolbox Omega</title>
+  <meta name="description" content="Calcula tu Índice de Masa Corporal (IMC/BMI) al instante. Incluye tabla de clasificación y peso ideal.">
+  <link rel="canonical" href="https://minitools2.vercel.app/bmi_calculator.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3189672198116367" crossorigin="anonymous"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+    :root{--bg:#07090f;--bg2:#0d1120;--primary:#7000ff;--sec:#00f5ff;--surface:rgba(20,25,40,0.7);--border:rgba(112,0,255,0.3);--text:#e0e8ff;--dim:rgba(224,232,255,0.55)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{background:rgba(7,9,15,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px}
+    .nav-logo{font-size:1.1rem;font-weight:800;background:linear-gradient(90deg,var(--sec),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;text-decoration:none}
+    .back{color:var(--dim);text-decoration:none;font-size:.88rem;transition:color .2s}.back:hover{color:var(--sec)}
+    main{flex:1;max-width:680px;margin:0 auto;padding:48px 24px;width:100%}
+    h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--sec));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .sub{color:var(--dim);margin-bottom:32px;font-size:.95rem}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;backdrop-filter:blur(20px);margin-bottom:20px}
+    .unit-toggle{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .unit-btn{flex:1;padding:10px;background:transparent;border:none;color:var(--dim);cursor:pointer;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all .2s}
+    .unit-btn.active{background:rgba(112,0,255,.25);color:#fff}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+    .field label{display:block;font-size:.82rem;color:var(--dim);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .field input{width:100%;background:#0a0c14;border:1px solid var(--border);border-radius:10px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;outline:none;transition:border-color .2s}
+    .field input:focus{border-color:var(--sec)}
+    .btn{width:100%;background:linear-gradient(135deg,var(--primary),#3d00cc);border:none;color:#fff;padding:16px;border-radius:12px;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+    .btn:hover{opacity:.85}
+    .result{display:none;text-align:center;padding:28px;border-radius:14px;margin-top:8px;border:2px solid transparent}
+    .bmi-num{font-size:4rem;font-weight:800}
+    .bmi-lbl{font-size:1.2rem;font-weight:700;margin:8px 0}
+    .bmi-sub{color:var(--dim);font-size:.88rem}
+    .gauge{width:100%;height:18px;border-radius:9px;margin:20px 0;overflow:hidden;position:relative;background:linear-gradient(90deg,#00aaff 0%,#00ff88 25%,#ffcc00 50%,#ff8800 75%,#ff3333 100%)}
+    .gauge-marker{position:absolute;top:-6px;width:6px;height:30px;background:#fff;border-radius:3px;transform:translateX(-50%);transition:left .5s}
+    .ideal-range{color:var(--dim);font-size:.85rem;margin-top:12px}
+    .ideal-range strong{color:#00ff88}
+    .table-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;backdrop-filter:blur(20px)}
+    table{width:100%;border-collapse:collapse}
+    th{background:rgba(112,0,255,.15);padding:12px 16px;text-align:left;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;color:var(--dim)}
+    td{padding:12px 16px;font-size:.88rem;border-top:1px solid rgba(255,255,255,.04)}
+    .pill{display:inline-block;padding:3px 12px;border-radius:20px;font-size:.75rem;font-weight:700}
+    footer{text-align:center;padding:24px;color:var(--dim);font-size:.78rem;border-top:1px solid var(--border)}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">TOOLBOX OMEGA</a>
+  <a href="index.html" class="back">← Volver</a>
+</nav>
+<main>
+  <h1>⚖️ Calculadora IMC</h1>
+  <p class="sub">Calcula tu Índice de Masa Corporal (IMC / BMI). La OMS define el rango normal entre 18.5 y 24.9.</p>
+  <div class="card">
+    <div class="unit-toggle">
+      <button class="unit-btn active" id="btnMetric" onclick="setUnit('metric')">Métrico (kg, cm)</button>
+      <button class="unit-btn" id="btnImperial" onclick="setUnit('imperial')">Imperial (lb, ft)</button>
+    </div>
+    <div class="fields" id="fieldsMetric">
+      <div class="field"><label>Peso (kg)</label><input type="number" id="weightKg" placeholder="70" min="1" max="500"></div>
+      <div class="field"><label>Altura (cm)</label><input type="number" id="heightCm" placeholder="170" min="50" max="300"></div>
+    </div>
+    <div class="fields" id="fieldsImperial" style="display:none">
+      <div class="field"><label>Peso (lbs)</label><input type="number" id="weightLb" placeholder="154" min="1" max="1100"></div>
+      <div class="field"><label>Altura (ft)</label><input type="number" id="heightFt" placeholder="5.7" step="0.1" min="1" max="10"></div>
+    </div>
+    <div class="field" style="margin-bottom:20px"><label>Edad (opcional)</label><input type="number" id="age" placeholder="30" min="1" max="120" style="width:140px"></div>
+    <button class="btn" onclick="calcBMI()">📊 Calcular IMC</button>
+    <div class="result" id="result">
+      <div class="bmi-num" id="bmiNum"></div>
+      <div class="bmi-lbl" id="bmiLbl"></div>
+      <div class="gauge"><div class="gauge-marker" id="gaugeMarker"></div></div>
+      <div class="bmi-sub" id="bmiSub"></div>
+      <div class="ideal-range" id="idealRange"></div>
+    </div>
+  </div>
+  <div class="table-card">
+    <table>
+      <tr><th>Clasificación OMS</th><th>IMC</th><th></th></tr>
+      <tr><td>Bajo peso severo</td><td>&lt; 16</td><td><span class="pill" style="background:rgba(0,170,255,.15);color:#00aaff">Bajo peso</span></td></tr>
+      <tr><td>Bajo peso</td><td>16 – 18.4</td><td><span class="pill" style="background:rgba(0,200,255,.12);color:#00ccff">Bajo peso</span></td></tr>
+      <tr><td>Peso normal</td><td>18.5 – 24.9</td><td><span class="pill" style="background:rgba(0,255,136,.12);color:#00ff88">Normal ✓</span></td></tr>
+      <tr><td>Sobrepeso</td><td>25 – 29.9</td><td><span class="pill" style="background:rgba(255,204,0,.12);color:#ffcc00">Sobrepeso</span></td></tr>
+      <tr><td>Obesidad grado I</td><td>30 – 34.9</td><td><span class="pill" style="background:rgba(255,136,0,.12);color:#ff8800">Obesidad I</span></td></tr>
+      <tr><td>Obesidad grado II</td><td>35 – 39.9</td><td><span class="pill" style="background:rgba(255,60,0,.12);color:#ff3c00">Obesidad II</span></td></tr>
+      <tr><td>Obesidad grado III</td><td>≥ 40</td><td><span class="pill" style="background:rgba(255,0,0,.12);color:#ff0000">Obesidad III</span></td></tr>
+    </table>
+  </div>
+  <p style="color:var(--dim);font-size:.75rem;margin-top:16px;text-align:center">⚠️ Esta calculadora es orientativa. Consulta a un profesional de salud para diagnóstico médico.</p>
+</main>
+<footer>Toolbox Omega — <a href="index.html" style="color:var(--sec)">Más herramientas →</a></footer>
+<script>
+  let unit='metric';
+  function setUnit(u){
+    unit=u;
+    document.getElementById('fieldsMetric').style.display=u==='metric'?'grid':'none';
+    document.getElementById('fieldsImperial').style.display=u==='imperial'?'grid':'none';
+    document.getElementById('btnMetric').classList.toggle('active',u==='metric');
+    document.getElementById('btnImperial').classList.toggle('active',u==='imperial');
+    document.getElementById('result').style.display='none';
+  }
+  function calcBMI(){
+    let weight,heightM;
+    if(unit==='metric'){
+      weight=parseFloat(document.getElementById('weightKg').value);
+      heightM=parseFloat(document.getElementById('heightCm').value)/100;
+    }else{
+      weight=parseFloat(document.getElementById('weightLb').value)*0.453592;
+      heightM=parseFloat(document.getElementById('heightFt').value)*0.3048;
+    }
+    if(!weight||!heightM||heightM<=0){alert('Ingresa peso y altura válidos.');return}
+    const bmi=weight/(heightM*heightM);
+    const res=document.getElementById('result');
+    res.style.display='block';
+    document.getElementById('bmiNum').textContent=bmi.toFixed(1);
+    let lbl,color,pct;
+    if(bmi<16){lbl='Bajo peso severo';color='#00aaff';pct=5}
+    else if(bmi<18.5){lbl='Bajo peso';color='#00ccff';pct=15}
+    else if(bmi<25){lbl='Peso normal ✓';color='#00ff88';pct=35}
+    else if(bmi<30){lbl='Sobrepeso';color='#ffcc00';pct=55}
+    else if(bmi<35){lbl='Obesidad grado I';color='#ff8800';pct=70}
+    else if(bmi<40){lbl='Obesidad grado II';color='#ff3c00';pct=85}
+    else{lbl='Obesidad grado III';color='#ff0000';pct=97}
+    document.getElementById('bmiLbl').textContent=lbl;
+    document.getElementById('bmiLbl').style.color=color;
+    document.getElementById('bmiNum').style.color=color;
+    res.style.borderColor=color+'44';
+    document.getElementById('gaugeMarker').style.left=pct+'%';
+    const idealMin=(18.5*heightM*heightM).toFixed(1);
+    const idealMax=(24.9*heightM*heightM).toFixed(1);
+    document.getElementById('idealRange').innerHTML=`Peso ideal para tu altura: <strong>${idealMin} – ${idealMax} kg</strong>`;
+    document.getElementById('bmiSub').textContent=bmi<18.5?'Considera aumentar tu ingesta calórica de forma saludable.':bmi<25?'¡Estás en el rango saludable según la OMS!':bmi<30?'Pequeños ajustes en dieta y ejercicio ayudan.':'Consulta a un médico o nutricionista.';
+  }
+</script>
+</body>
+</html>
